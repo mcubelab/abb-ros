@@ -1,0 +1,10 @@
+# This service allows the user to enter a guess as to where they expect the object to be in order to speed up computation.
+
+bool use_guess
+float64[3] trans
+float64[4] quat
+
+---
+
+int64 ret
+string msg

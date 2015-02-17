@@ -1,0 +1,6 @@
+hand: {arduinoSerialBaud: 115200, arduinoSerialId: /dev/ttyUSB0, motorForce: 0.5,
+  motorSpeed: 0.5, maxMotorIntensity: 600, #3000, #800, 
+  maxMotorSpeed: 250, minMotorIntensity: 200, #500,
+  minMotorSpeed: 0, motorSerialBaud: 38400, motorSerialId: /dev/ttyUSB1, stepsPerDegreeFingers: 11.38,
+  stepsPerDegreeMotor: -200.0, zeroMotorPos: -2200 # -171.27 -5800 -200.0 -1500
+      }

@@ -1,0 +1,8 @@
+# Service to train a singulation detection model
+string logFolderName       #Folder where to look for log files to train the model.
+string modelName           #Name of the model to save (without any extension).
+---
+float64 theta_nll
+float64 r_nll
+int64 ret
+string msg

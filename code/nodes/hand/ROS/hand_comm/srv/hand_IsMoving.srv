@@ -1,0 +1,5 @@
+#Is the hand moving?
+---
+int64 moving     # 1 (moving) 0 (not)
+int64 ret        # Set to 1 (success) or 0 (error)
+string msg       # Error description

@@ -1,0 +1,16 @@
+<package>
+  <description brief="matlab_node">
+
+     matlab_node
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/matlab_node</url>
+  <depend package="roscpp"/>
+  <depend package="matlab_comm"/>
+
+</package>
+
+

@@ -1,0 +1,18 @@
+<package>
+  <description brief="regrasp_comm">
+
+     regrasp_comm
+
+  </description>
+  <author>Bowei Tang</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/regrasp_comm</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lregrasp_comm"/>
+  </export>
+</package>
+
+

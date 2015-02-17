@@ -1,0 +1,21 @@
+<package>
+  <description brief="regrasp_test">
+
+     regrasp_test
+
+  </description>
+  <author>Anne Holladay</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/regrasp_test</url>
+ 
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="robot_comm"/>
+  <depend package="hand_comm"/>
+  <depend package="regraspComm"/>
+  <depend package="util_comm"/>
+
+</package>
+
+

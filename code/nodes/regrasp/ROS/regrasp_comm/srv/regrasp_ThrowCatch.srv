@@ -1,0 +1,12 @@
+# Service to use the frame to help drop the objects and change a vertical grasping direction
+# number of fingers defined in hand_comm.h
+
+int64 SC_number	   # this is special command number
+float64 Z1         # this is 1st position 
+float64 Z2	   # this is 2nd position
+float64 A1	   # this is 1st Acceleration
+float64 A2	   # this is 2nd Acceleration
+float64 A3 	   # this is 3rd Acceleration
+---
+int64 ret            # Set to 1 (success) or 0 (error)
+string msg           # Error description

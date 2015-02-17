@@ -1,0 +1,5 @@
+#Service to call the test compliant link routine
+string fileName # Name of file to create
+---
+int64 ret     # Set to 1 (success) or 0 (error)
+string msg    # Error description

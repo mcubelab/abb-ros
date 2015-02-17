@@ -1,0 +1,11 @@
+# This service allows the user to enter the preferred orientation to return
+# the object pose with respect to, in case symmetries in the object exist.
+# Note that this preferred orientation is with respect to the hand
+
+bool use_pref_orient    # Whether or not to use a preferred orientation
+float64[4] quat         # The preferred orientation
+
+---
+
+int64 ret
+string msg

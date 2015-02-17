@@ -1,0 +1,23 @@
+<package>
+  <description brief="palm_calibration">
+
+    Task node to calibrate the P3 force sensing palm.  This uses
+    the robot arm to position the palm against a table-mounted
+    force sensor to measure the spring function and calibrate the
+    analog inputs.
+
+  </description>
+  <author>Garth Zeglin</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/palm_calibration</url>
+  <depend package="roscpp"/>
+  <depend package="robot_comm"/>
+  <depend package="robot_node"/>
+  <depend package="hand_comm"/>
+  <depend package="matVec"/>
+  <depend package="geometry_msgs"/> <!-- used by netft_rdt_driver, e.g. WrenchStamped -->
+  <depend package="netft_rdt_driver"/> <!-- force sensor driver -->
+</package>
+
+

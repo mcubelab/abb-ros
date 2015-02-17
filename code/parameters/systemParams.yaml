@@ -1,0 +1,28 @@
+system: {cameraJ1: -72.66, cameraJ2: 21.79, cameraJ3: -17.93, 
+          cameraJ4: 91.22, cameraJ5: 72.49, cameraJ6: -3.99,
+          safeCameraX: 58.8, safeCameraY: 580.0, safeCameraZ: 658.8,
+          safeCameraQ0: 0.7071, safeCameraQX: 0.7071, safeCameraQY: 0.0, safeCameraQZ: 0.0,
+          cameraX: 55.0, cameraY: 465.0, cameraZ: 660.0,
+          cameraQ0: 0.7071, cameraQX: 0.7071, cameraQY: 0.0, cameraQZ: 0.0,
+          placeJ1: -73.2, placeJ2: 31.8, placeJ3: -3.2, 
+          placeJ4: 98.2, placeJ5: 75.3, placeJ6: -29.7,
+          homeJ1: -25.98, homeJ2: 1.31, homeJ3: 48.62, 
+          homeJ4: 0.09, homeJ5: 40.01, homeJ6: -25.84,
+          homeX: 470.0, homeY: 520.0, homeZ: 250.0, 
+          homeQ0: 0.0, homeQX: 0.7071, homeQY: 0.7071, homeQZ: 0.0,
+          testHomeJ1: 25.44, testHomeJ2: 1.2, testHomeJ3: 48.66, 
+          testHomeJ4: 0.09, testHomeJ5: 40.11, testHomeJ6: 25.58, 
+          testHomeX: 750.0, testHomeY: 520.0, testHomeZ: 250.0, 
+          testHomeQ0: 0.0, testHomeQX: 0.7071, testHomeQY: 0.7071, testHomeQZ: 0.0,
+          testActionX: 1160.0, testActionY: 580.0, testActionZ: 650.0,
+          testActionQ0: 0.7071, testActionQX: 0.7071, testActionQY: 0.0, testActionQZ: 0.0,
+          testActionJ1: 83.48, testActionJ2: 17.01, testActionJ3: -10.3,
+          testActionJ4: -90.74, testActionJ5: 83.73, testActionJ6: 186.81,
+          binMinX: 535.0, binMaxX: 685.0, binMinY: 335, binMaxY: 460,
+          objRecInitJ1: -12.43, objRecInitJ2: 12.75, objRecInitJ3: -1.84, 
+          objRecInitJ4: 0.06, objRecInitJ5: 79.1, objRecInitJ6: -132.23, 
+          objRecInitX: 500.0, objRecInitY: 300.0, objRecInitZ: 460.0,
+          objRecInitQ0: 0.0, objRecInitQX: -0.2588, objRecInitQY: 0.9659, objRecInitQZ: 0.0 }
+
+# CAMERA CARTESIAN POSITION: 55.0, 465.0, 660.0, 0.7071, 0.7071, 0.0, 0.0
+

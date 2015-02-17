@@ -1,0 +1,14 @@
+# Place Service: Execute open loop place of a marker
+
+float64 angle     # Amount to rotate hand by (rad)
+float64 h_dist    # Amount to move hand horizontally by (mm)
+float64 v1_dist   # Amount to vertically move down the first time (mm)
+float64 v2_dist   # Amount to vertically move down the second time (mm)
+bool test         # Whether to drop on test side or train side
+  
+---
+string logFileName  # Name of logfile as a result of the place
+string picFileName  # Name of picture taken during placing
+bool success        # True if placing was successful, false otherwise
+int64 ret           # Holds whether service was fully executed or not
+string msg          # Message of whether there was an error while executing

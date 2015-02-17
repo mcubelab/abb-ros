@@ -1,0 +1,13 @@
+Header header		# possible record keeping later
+
+bool captureNew
+int32 cameraNum
+
+# The filename to be loaded.  This serves two purposes:
+# 1. If captureNew is true, the system takes a picture and saves it as
+# this filename.
+# 2. If captureNew is false, the system assumes this filename already
+# exists and uses it as the calibration image.
+string calibrationFilename
+---
+string response

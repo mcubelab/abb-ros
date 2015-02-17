@@ -1,0 +1,10 @@
+# Service to use the frame to help drop the objects and change a vertical grasping direction
+# number of fingers defined in hand_comm.h
+
+float64 rotateangle         # The only difference between the actions is the rotation angle around z-axis.
+float64 x
+float64 y
+float64 z               # The hight to put the block on the frame
+---
+int64 ret            # Set to 1 (success) or 0 (error)
+string msg           # Error description

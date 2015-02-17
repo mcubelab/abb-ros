@@ -1,0 +1,51 @@
+This (5/9/11) is the initial commit of the mocap node.
+
+At the moment, it's rather hackish in implementation (though
+robust in function: it works!).
+
+This node makes no checks for things it depends on. These include:
+    - Python 2.x installed and set as the default
+    - Windows Virtual machine running at 192.168.56.101 with NatNet 2.2 streaming Unicast on the default ports (1510 and 1511)
+    - The IP Address of the computer running the node (relative to the Windows VM) is 192.168.56.1
+    - WINE must be installed
+
+The file "display.py" starts a node called "mocap" and publishes to a topic called "mocap_marker_data".
+
+Each message on the mocap_marker_data topic is a string formatted
+as follows (trailing newline is removed for ease of parsing):
+
+Line 1:         | n           |     n is a single integer that is the number of markers detected by the mocap system
+Lines 2 to n+1: | a,[c,d,e]   |     a is the id of the marker on this line.  Note that I've had some instances of markers changing ids randomly during a stream
+                              |     [c,d,e] are the 3D position coordinates of the marker in question.  They are relative to some origin which can be set in TrackingTools
+                              |       and are measured in meters.  Trackingtools has a resolution roughly on the order of millimeters, but to get
+                              |       that resolution, we need to change PacketClient.exe .  They are currently given as decimal numbers accurate to two
+                              |       places (centimeter accuracy).
+
+
+In my tests, I measured a data output rate of roughly 20kB/s.
+This test, however, was piping to /dev/null, so writing to the
+ROS network might be a little bit slower.  If this is too much
+data, the only real solution would be either to compress it
+somehow or (more realistically, in my opinion) to skip frames.
+This would be easy to do in the python script.
+
+
+FUTURE WORK / TODO:
+    -It would be really nice (and not tremendously hard, I would
+    guess) for someone familiar with VisualC++ and/or Windows
+    socket programming to port over the PacketClient to a UNIX
+    program.  This would remove the dependency on WINE, and also
+    allow us to move some or all of the parsing into the C/C++
+    program.  If we can get everything into the C/C++ program, we
+    can eliminate the bash and python scripts and just use
+    roscpp.  The PacketClient.cpp source is in the NatNet SDK,
+    it's one of the examples.
+
+    -Adding some checks for the requirements listed above (mostly
+    to see that the VM is running) would be great.
+
+    -The streamer also supports rigid body streaming.  Rigid
+    bodies are easy to configure in TrackingTools (on the VM),
+    and outputting them to ROS shouldn't be tremendously
+    difficult.  Publishing them on a different topic
+    (mocap_bodies maybe?) would be smart.

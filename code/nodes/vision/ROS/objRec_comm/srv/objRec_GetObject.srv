@@ -1,0 +1,25 @@
+# This service returns the best estimate for what object is in the scene, 
+#  and where the object is in that scene
+
+# There are 3 different ways to use this service. 
+# 1) Name of point cloud file
+# 2) An actual point cloud
+# 3) The current point cloud that objRec is subscribed to
+
+# If both the file name and point cloud message are empty, then we 
+#  will use the current point cloud we are subscribed to.
+
+string filename                 # Name of point cloud file. If empty, ignore
+#sensor_msgs/PointCloud2 points  # An actual point cloud. If empty, ignore
+string cameraName
+
+bool onTable      # True if we can assume the object is on the table and is not occluded by anything
+
+----
+
+int64 objNum
+float64[3] trans
+float64[4] quat
+
+int64 ret
+string msg

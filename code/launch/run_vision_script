@@ -1,0 +1,11 @@
+#!/bin/sh
+
+stty sane
+
+ssh -t 192.168.1.6 "stty sane; roslaunch launch tableVision.launch; stty sane"
+
+stty sane
+
+echo "********************************************"
+echo "Connection to vision computer closed"
+echo "********************************************"

@@ -1,0 +1,2 @@
+geometry_msgs/Pose safe_pose
+geometry_msgs/Pose push_stop_pose

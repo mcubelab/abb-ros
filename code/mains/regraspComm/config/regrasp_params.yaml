@@ -1,0 +1,175 @@
+pick_position_x: 600.0
+pick_position_y: 200.0
+pick_position_z: 79.0
+pick_orientation_w: 0.0  
+pick_orientation_x: 0.707
+pick_orientation_y: 0.707
+pick_orientation_z: 0.0
+
+place_position_x: 600.0
+place_position_y: 300.0
+place_position_z: 100.0
+place_orientation_w: 0.0
+place_orientation_x: 0.707
+place_orientation_y: 0.707
+place_orientation_z: 0.0  
+
+throwToPalm_setup_position_x: 600.0
+throwToPalm_setup_position_y: 300.0
+throwToPalm_setup_position_z: 200.0
+throwToPalm_setup_orientation_w: 0.0
+throwToPalm_setup_orientation_x: 0.707
+throwToPalm_setup_orientation_y: 0.707
+throwToPalm_setup_orientation_z: 0.0
+throwToPalm_tsleep: 250000
+throwToPalm_throw_speed: 0.95
+throwToPalm_grasp_speed: 0.9
+
+
+pushInEnveloping_position_x: 600.0
+pushInEnveloping_position_y: 200.0
+pushInEnveloping_position_z: 200.0
+pushInEnveloping_orientation_w: 0.0
+pushInEnveloping_orientation_x: 0.707
+pushInEnveloping_orientation_y: 0.707
+pushInEnveloping_orientation_z: 0.0
+pushInEnveloping_push_position_x: 600.0
+pushInEnveloping_push_position_y: 200.0
+pushInEnveloping_push_position_z: 76.5
+pushInEnveloping_push_orientation_w: 0.0
+pushInEnveloping_push_orientation_x: 0.707
+pushInEnveloping_push_orientation_y: 0.707
+pushInEnveloping_push_orientation_z: 0.0
+
+vibrate_angle: 35.0
+
+throwAndFlip_sleep: 20000
+throwAndFlip_pose_position_x: 600.0
+throwAndFlip_pose_position_y: 700.0
+throwAndFlip_pose_position_z: 800.0
+throwAndFlip_pose_orientation_w: 0.707
+throwAndFlip_pose_orientation_x: 0.0
+throwAndFlip_pose_orientation_y: 0.0
+throwAndFlip_pose_orientation_z: -0.707
+throwAndFlip_hand_speed: 0.52
+throwAndFlip_topple_OpnAngle: 16
+
+
+pushInFingers_zone: 1
+pushInFingers_frame_position_x: 900.0
+pushInFingers_frame_position_y: 230.0
+pushInFingers_frame_position_z: 112.0
+pushInFingers_frame_orientation_w: 0.0
+pushInFingers_frame_orientation_x: 0.707
+pushInFingers_frame_orientation_y: 0.707
+pushInFingers_frame_orientation_z: 0.0
+
+rollToFingertip_roll_angle: 17
+
+rollOnGround_tcp: 30.0
+rollOnGround_ori: 10.0
+rollOnGround_roll_angle: 180
+rollOnGround_position_x: 750.0
+rollOnGround_position_y: 200.0
+rollOnGround_position_z: 78.5 
+rollOnGround_orientation_w: 0.0
+rollOnGround_orientation_x: 0.707
+rollOnGround_orientation_y: 0.707
+rollOnGround_orientation_z: 0.0
+
+rollToPalm_sleep: 800000
+rollToPalm_hand_speed: 0.95
+
+rollToGround_sleep: 1000000
+rollToGround_hand_speed: 0.85
+rollToGround_flip_position_x: 612.0
+rollToGround_flip_position_y: 188.0
+rollToGround_flip_position_z: 120.5 
+rollToGround_flip_orientation_w: 0.0419
+rollToGround_flip_orientation_x: 0.0591
+rollToGround_flip_orientation_y: 0.8264
+rollToGround_flip_orientation_z: -0.5577
+
+
+droopInFingers_droopAngle: 50.0  
+droopInFingers_pick_position_x: 600.0
+droopInFingers_pick_position_y: 235.0
+droopInFingers_pick_position_z: 80.5 
+droopInFingers_pick_orientation_w: 0.0
+droopInFingers_pick_orientation_x: 0.707
+droopInFingers_pick_orientation_y: 0.707
+droopInFingers_pick_orientation_z: 0.0
+
+droopInFingers_tcp: 20.0
+droopInFingers_ori: 10.0
+droopInFingers_pick2_position_x: 593.0
+droopInFingers_pick2_position_y: 242.0
+droopInFingers_pick2_position_z: 175
+droopInFingers_pick2_orientation_w: 0.0
+droopInFingers_pick2_orientation_x: 0.707
+droopInFingers_pick2_orientation_y: 0.707
+droopInFingers_pick2_orientation_z: 0.0
+droopInFingers_place_position_x: 600.0
+droopInFingers_place_position_y: 200.0
+droopInFingers_place_position_z: 78.5 
+droopInFingers_place_orientation_w: 0.0
+droopInFingers_place_orientation_x: 0.707
+droopInFingers_place_orientation_y: 0.707
+droopInFingers_place_orientation_z: 0.0
+droopInFingers_place2_position_x: 600.0
+droopInFingers_place2_position_y: 235.0
+droopInFingers_place2_position_z: 195
+droopInFingers_place2_orientation_w: 0.0
+droopInFingers_place2_orientation_x: 0.707
+droopInFingers_place2_orientation_y: 0.707
+droopInFingers_place2_orientation_z: 0.0
+ 
+longEdgeDroop_pick_position_x: 635.0
+longEdgeDroop_pick_position_y: 200.0
+longEdgeDroop_pick_position_z: 100
+longEdgeDroop_pick_orientation_w: 0.3796
+longEdgeDroop_pick_orientation_x: -0.5951
+longEdgeDroop_pick_orientation_y: -0.5972
+longEdgeDroop_pick_orientation_z: 0.381
+
+shortEdgeDroop_pick_position_x: 600.0
+shortEdgeDroop_pick_position_y: 200.0
+shortEdgeDroop_pick_position_z: 150.5 
+shortEdgeDroop_pick_orientation_w: 0.3796
+shortEdgeDroop_pick_orientation_x: -0.5951
+shortEdgeDroop_pick_orientation_y: -0.5972
+shortEdgeDroop_pick_orientation_z: 0.381
+
+topple_dir_x: 0
+topple_dir_y: -1
+topple_dir_z: 0
+topple_position_x: 600.0
+topple_position_y: 200.0
+topple_position_z: 100.0 
+topple_orientation_w: 0.0
+topple_orientation_x: 0.707
+topple_orientation_y: 0.707
+topple_orientation_z: 0.0
+
+
+throwToFingertip_speed: 0.9
+throwToFingertip_fspeed: 0.8
+throwToFingertip_sleep: 15000
+throwToFingertip_E2F_open_angle: 7
+throwToFingertip_pose_position_x: 600
+throwToFingertip_pose_position_y: 700
+throwToFingertip_pose_position_z: 800
+throwToFingertip_pose_orientation_w: 0.707
+throwToFingertip_pose_orientation_x: 0.0
+throwToFingertip_pose_orientation_y: 0.0
+throwToFingertip_pose_orientation_z: -0.707
+
+lieToStand_x: 0.0
+lieToStand_y: 0.0
+lieToStand_z: 0.0
+lieToStand_rotate_angle: 0.0
+
+standToLie_x: -5.0
+standToLie_y: -35.0
+standToLie_z: 102.0
+standToLie_rotate_angle: -0.52

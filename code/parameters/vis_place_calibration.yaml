@@ -1,0 +1,20 @@
+image_width: 640
+image_height: 480
+camera_name: point_grey_flea_2
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [668.533859, 0, 318.056672, 0, 671.425993, 252.591536, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.222456, 0.231156, 0.001828, 0.00033, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [639.991943, 0, 317.619674, 0, 0, 652.49939, 253.161428, 0, 0, 0, 1, 0]

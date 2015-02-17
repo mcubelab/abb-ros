@@ -1,0 +1,11 @@
+<launch>
+    <rosparam command="load" file="$(find parameters)/systemParams.yaml"/>
+    <rosparam command="load" file="$(find parameters)/robotParams_virtual.yaml"/>
+    <rosparam command="load" file="$(find parameters)/matlabParams.yaml"/>
+    <rosparam command="load" file="$(find parameters)/handParams.yaml"/>
+    <rosparam command="load" file="$(find parameters)/loggerParams.yaml"/>
+    <node pkg="robot_node" type="robot_node" name="robot_node" output="screen"/>
+    <node pkg="hand_node" type="hand_node" name="hand_node" output="screen"/>
+    <node pkg="logger_node" type="logger_node" name="logger_node" output="screen"/>
+    <node pkg="matlab_node" type="matlab_node" name="matlab_node" output="screen"/>
+</launch>

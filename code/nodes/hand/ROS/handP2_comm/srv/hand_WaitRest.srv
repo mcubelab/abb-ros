@@ -1,0 +1,5 @@
+#Service to wait until the hand is at rest
+float64 delay    # Seconds to wait before begin to check for rest
+---
+int64 ret        # Set to 1 (success) or 0 (error)
+string msg       # Error description

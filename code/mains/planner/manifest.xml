@@ -1,0 +1,26 @@
+<package>
+  <description brief="planner">
+
+     planner
+
+  </description>
+  <author>annie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/planner</url>
+  <depend package="roscpp"/>
+  <depend package="roslib" />
+  <depend package="robot_comm"/>
+  <depend package="hand_comm"/>
+  <depend package="regraspComm"/>
+  <depend package="regraspNode"/>
+  <depend package="matVec"/>
+  <depend package="util_comm"/>
+  <depend package="objRec_comm"/>
+  <depend package="handRec_comm"/>
+  <depend package="matlab_comm" />
+  <depend package="tableVision_comm"/>
+
+</package>
+
+

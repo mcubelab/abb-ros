@@ -1,0 +1,17 @@
+<package>
+  <description brief="robot_node">
+
+     robot_node
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/robot_node</url>
+  <depend package="roscpp"/>
+  <depend package="robot_comm"/>
+  <depend package="matVec"/>
+
+</package>
+
+

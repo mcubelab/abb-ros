@@ -1,0 +1,20 @@
+<package>
+  <description brief="poseEstimator">
+
+     poseEstimator
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/poseEstimator</url>
+  <depend package="roscpp"/>
+  <depend package="brain_comm"/>
+  <depend package="grasp_comm"/>
+  <depend package="sense_comm"/>
+  <depend package="place_comm"/>
+  <depend package="util_comm"/>
+
+</package>
+
+

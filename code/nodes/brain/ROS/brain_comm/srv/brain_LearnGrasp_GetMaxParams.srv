@@ -1,0 +1,5 @@
+# Service to get the current best grasping parameters while learning a grasping model
+---
+float64[] maxP       # The best parameters
+int64 ret
+string msg

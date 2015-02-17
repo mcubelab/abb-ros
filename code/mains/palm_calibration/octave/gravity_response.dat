@@ -1,0 +1,18 @@
+# Created by Octave 3.6.2, Fri Sep 14 15:57:55 2012 EDT <garthz@jitterbug>
+# name: mass
+# type: scalar
+0.1738522826937234
+
+
+# name: grav
+# type: scalar
+9.81
+
+
+# name: com
+# type: matrix
+# rows: 1
+# columns: 3
+ 6.24219152439291 14.66010706480684 5.520526246842857
+
+

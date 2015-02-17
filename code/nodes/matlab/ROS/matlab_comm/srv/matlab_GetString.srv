@@ -1,0 +1,6 @@
+# Service to get a string to MATLAB through the Matlab engine
+string name       # Name of the variable to recover. It should be an array.
+---
+string data       # Data recovered
+int64 ret         # Set to 1 (success) or 0 (error)
+string msg        # Error description

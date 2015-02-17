@@ -1,0 +1,25 @@
+<package>
+  <description brief="regraspComm">
+
+     regraspComm
+
+  </description>
+  <author>Annie Holladay</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/regraspComm</url>
+
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="robot_comm"/>
+  <depend package="hand_comm"/>
+  <depend package="util_comm"/>
+  <depend package="geometry_msgs"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lregrasp_comm"/>
+  </export>
+
+</package>
+
+

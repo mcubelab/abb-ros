@@ -1,0 +1,17 @@
+<package>
+  <description brief="logger_node">
+
+     logger_node
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/logger_node</url>
+  <depend package="roscpp"/>
+  <depend package="logger_comm"/>
+  <depend package="robot_comm"/>
+  <depend package="hand_comm"/>
+</package>
+
+

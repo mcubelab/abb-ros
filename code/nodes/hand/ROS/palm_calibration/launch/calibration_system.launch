@@ -1,0 +1,31 @@
+<!-- -*- mode: xml; -*- -->
+<!-- set up to test the ATI mini-40 force sensor on the Net F/T box -->
+<!-- see http://www.ros.org/wiki/roslaunch/XML/node -->
+
+<launch>
+  <!-- load standard parameters -->
+  <rosparam command="load" file="$(find parameters)/systemParams.yaml"/>
+  <rosparam command="load" file="$(find parameters)/robotParams.yaml"/>
+  <rosparam command="load" file="$(find parameters)/handParams.yaml"/>
+
+  <!-- start the ABB Arm driver node -->
+  <node pkg="robot_node" type="robot_node" name="robot_node" output="screen"/>
+
+  <!-- start the P3 hand node node -->
+  <node pkg="hand_node" type="hand_node" name="hand_node" output="screen"/>
+
+  <!-- start the Net F/T driver node -->
+  <include file="$(find palm_calibration)/launch/netft.launch" />
+
+  <!-- start the standard MLAB data recording node -->
+  <!-- <node pkg="logger_node" type="logger_node" name="logger_node" output="screen"/> -->
+
+  <!-- start the standard MLAB graphic display on another computer -->
+  <!--  <include file="$(find launch)/display.launch"/> -->
+
+  <!-- launch the two calibrator nodes -->
+  <node name="palm_calibration"     type="palm_calibration"    pkg="palm_calibration" output="screen" />
+  <node name="calibration_motion"   type="calibration_motion"  pkg="palm_calibration" output="screen" />
+
+</launch>
+

@@ -1,0 +1,12 @@
+Header header
+
+string filename
+---
+int32 num_markers
+float64[4] certainty  # value from 0.0 to 1.0 of our confidence
+float64 distance    # Marker height in mm
+float64[4] posx     # x coordinate of center of marker in mm
+float64[4] posy     # y coordinate of center of marker in mm
+float64[4] theta    # Angle with respect to the horizontal (rad)
+float64[4] alpha    # Angle of line through origin and perpendicular to marker axis (mm)
+float64[4] r        # Distance from hand origin to major axis of marker (mm)

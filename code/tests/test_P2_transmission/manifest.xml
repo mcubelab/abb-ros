@@ -1,0 +1,17 @@
+<package>
+  <description brief="test_P2_transmission">
+
+     test_P2_transmission
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/test_P2_transmission</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="handP2_comm"/>
+
+</package>
+
+

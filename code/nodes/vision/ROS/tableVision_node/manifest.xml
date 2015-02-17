@@ -1,0 +1,19 @@
+<package>
+  <description brief="tableVision_node">
+
+     tableVision_node
+
+  </description>
+  <author>giant</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/tableVision_node</url>
+  <depend package="roscpp"/>
+  <depend package="tableVision_comm"/>
+  <depend package="objRec_comm"/>
+  <depend package="hand_comm"/>
+  <depend package="robot_comm"/>
+
+</package>
+
+

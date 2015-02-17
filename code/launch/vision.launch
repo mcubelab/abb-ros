@@ -1,0 +1,28 @@
+<launch>
+<machine name="vis_comp" address="192.168.1.6" user="simplehands"
+env-loader = "/home/simplehands/Documents/hands/code/launch/env.sh" >
+</machine>
+
+<!-- first camera and associated image pipeline -->
+<group ns="vis_hand" >
+<node machine="vis_comp" pkg="camera1394" type="camera1394_node" name="camera1394_node" >
+<param name="guid" value="00b09d01008fe735" />
+<param name="frame_id" value="vis_hand" />
+<param name="camera_info_url" value="file://$(find parameters)/vis_hand_calibration.yaml" />
+<rosparam file="$(find parameters)/cameraParams.yaml"/>
+</node>
+</group>
+
+<!-- second camera and associated image pipeline -->
+<group ns="vis_place" >
+<node machine="vis_comp" pkg="camera1394" type="camera1394_node" name="camera1394_node" >
+<param name="guid" value="00b09d01008fe72b" />
+<param name="frame_id" value="vis_place" />
+<param name="camera_info_url" value="file://$(find parameters)/vis_place_calibration.yaml" />
+<rosparam file="$(find parameters)/cameraParams.yaml"/>
+</node>
+</group>
+
+<node machine="vis_comp" name="vision_node" type="vision_node" pkg="vision_node"/>
+
+</launch>

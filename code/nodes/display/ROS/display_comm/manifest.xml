@@ -1,0 +1,18 @@
+<package>
+  <description brief="display_comm">
+
+     display_comm
+
+  </description>
+  <author>simplehands</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/display_comm</url>
+  <depend package="roscpp"/>
+  <export>
+<!--    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -ldisplay_comm"/> -->
+    <cpp cflags="-I${prefix}/include"/>
+  </export>  
+</package>
+    
+

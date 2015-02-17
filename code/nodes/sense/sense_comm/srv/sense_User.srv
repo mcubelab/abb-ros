@@ -1,0 +1,14 @@
+# Sense service: User guided
+
+string logFileName    # name of the logFile before sensing the state of the hand (relative to logFolder)
+---
+bool singulated       # 1-yes 0-no.
+int64 nMarkers        # number of markers.
+float64 x             # x coordinate of the center of the marker (in the tool reference frame).
+float64 y	      # y coordinate of the center of the marker (in the tool reference frame).
+float64 theta         # orientation of the marker in the image (in radians)
+float64 alpha         # angle of line perpendicular to marker axis (in radians)
+float64 distance      # distance from marker axis to center of the palm
+string logFileName    # name of the logFile after appending the output of the sense service (relative to logFolder).
+int64 ret
+string msg

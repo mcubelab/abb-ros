@@ -1,0 +1,16 @@
+<package>
+  <description brief="hand_node">
+
+     hand_node
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/hand_node</url>
+  <depend package="roscpp"/>
+  <depend package="hand_comm"/>
+  <depend package="serialPort"/>
+</package>
+
+

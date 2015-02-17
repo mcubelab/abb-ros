@@ -1,0 +1,5 @@
+# Service to create an empty log file
+---
+string filename    # Full name of the file (relative to the logFolder)
+int64 ret          # Set to 1 (success) or 0 (error)
+string msg         # Error description

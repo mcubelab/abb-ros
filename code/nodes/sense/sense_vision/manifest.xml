@@ -1,0 +1,20 @@
+<package>
+  <description brief="sense_vision">
+
+     sense_vision
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sense_vision</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="logger_comm"/>
+  <depend package="util_comm"/>
+  <depend package="vision_comm"/>
+  <depend package="sense_comm"/>
+
+</package>
+
+

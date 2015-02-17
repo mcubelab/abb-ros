@@ -1,0 +1,26 @@
+<package>
+  <description brief="container_node">
+
+     container_node
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/container_node</url>
+  <depend package="roscpp"/>
+  <depend package="image_transport"/>
+  <depend package="sensor_msgs"/>
+  <depend package="std_msgs"/>
+  <depend package="container_comm"/>
+  <depend package="matlab_comm"/>
+  <depend package="matVec"/>
+  <depend package="opencv2"/>
+  <depend package="cv_bridge"/>
+  <depend package="message_filters"/>
+  <depend package="tf"/>
+	<depend package="pcl"/>
+	<depend package="pcl_ros"/>
+</package>
+
+

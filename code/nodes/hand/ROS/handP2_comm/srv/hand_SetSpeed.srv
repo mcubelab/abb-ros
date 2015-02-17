@@ -1,0 +1,5 @@
+# Service to Set the Speed of the hand
+float64 speed    # Value between 0 and 1
+---
+int64 ret        # Set to 1 (success) or 0 (error)
+string msg       # Error description

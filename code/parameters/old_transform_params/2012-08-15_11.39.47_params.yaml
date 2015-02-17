@@ -1,0 +1,9 @@
+qw: 5.27468e-317
+qx: 0
+qy: 5.2769e-317
+qz: 0
+tx: 0
+ty: 2.16728e+76
+tz: 0
+# This simply holds the latest params. Old ones are pushed to
+#old_transform_params/<time>_params.yaml ./<time>_params.yaml .

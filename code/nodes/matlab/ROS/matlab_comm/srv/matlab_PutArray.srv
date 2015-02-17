@@ -1,0 +1,8 @@
+# Service to put an array into the MATLAB workspace
+int64 nrows 	  # Number of rows of the array
+int64 ncols 	  # Number of columns of the array
+float64[] data    # Data (row by row)
+string name       # Name to give to the array in the MATLAB workspace
+---
+int64 ret         # Set to 1 (success) or 0 (error)
+string msg        # Error description

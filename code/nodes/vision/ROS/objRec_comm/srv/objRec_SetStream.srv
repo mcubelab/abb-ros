@@ -1,0 +1,12 @@
+# This service allows the user to turn streaming object position on or off.
+#  If planning on mostly doing one shot queries, we can significantly 
+#  reduce the load by not computing object position unless asked
+
+bool streaming
+string cameraName
+
+---
+
+int64 ret           # Whether we were successfully able to change bounds
+string msg          # Any error message associated with it
+

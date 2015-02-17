@@ -1,0 +1,4 @@
+# Service to save the current grasp learning model
+---
+int64 ret
+string msg

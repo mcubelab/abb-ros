@@ -1,0 +1,20 @@
+<package>
+  <description brief="grasper">
+
+     grasper
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/grasper</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="grasp_comm"/>
+  <depend package="sense_comm"/>
+  <depend package="util_comm"/>
+  <depend package="brain_comm"/>
+
+</package>
+
+

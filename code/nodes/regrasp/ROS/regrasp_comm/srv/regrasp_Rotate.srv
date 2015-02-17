@@ -1,0 +1,7 @@
+# Service to rotate the objects on the table. Just change the grasp direction
+# number of fingers defined in hand_comm.h
+
+float64 rotateangle
+---
+int64 ret            # Set to 1 (success) or 0 (error)
+string msg           # Error description

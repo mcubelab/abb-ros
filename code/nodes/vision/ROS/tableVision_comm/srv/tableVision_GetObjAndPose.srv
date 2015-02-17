@@ -1,0 +1,10 @@
+# Looks for an object on the table and returns the identity of the object
+# and its pose on the table
+
+---
+string filename
+int64 objNum
+geometry_msgs/PoseStamped result
+
+int64 ret
+string msg

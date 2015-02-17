@@ -1,0 +1,23 @@
+<package>
+  <description brief="learn_to_grasp">
+
+     learn_to_grasp
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/learn_to_grasp</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="grasp_comm"/>
+  <depend package="sense_comm"/>
+  <depend package="brain_comm"/>
+  <depend package="matlab_comm"/>
+  <depend package="util_comm"/>
+
+
+
+</package>
+
+

@@ -1,0 +1,10 @@
+# The x, y positions of the point at which we want to get the height.
+float64 x
+float64 y
+float64 radius 
+
+# The filename of the image.
+# string filename 
+--- 
+float64 avgHeight
+int32 numPoints

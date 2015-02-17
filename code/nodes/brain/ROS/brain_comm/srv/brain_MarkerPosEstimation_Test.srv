@@ -1,0 +1,9 @@
+# Service to test a log file against a singulation detection model
+string logFileName         #Name of the log file to test (relative to the log folder)
+---
+float64 theta       # Angle of Marker
+float64 r           # Distance from center 
+float64 theta_s     # standard deviation of angle estimate
+float64 r_s         # standard deviation of distance estimate
+int64 ret
+string msg

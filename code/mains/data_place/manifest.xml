@@ -1,0 +1,21 @@
+<package>
+  <description brief="data_place">
+
+     data_place
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/data_place</url>
+  <depend package="roscpp"/>
+  <depend package="matlab_comm"/>
+  <depend package="sense_comm"/>
+  <depend package="place_comm"/>
+  <depend package="util_comm"/>
+  <depend package="grasp_comm"/>
+  <depend package="logger_comm"/>
+
+</package>
+
+

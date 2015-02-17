@@ -1,0 +1,30 @@
+# This file describes a small colored wooden cube 
+# found in a block set
+
+# Name of object
+Small Cube
+
+# Name of point cloud file
+small_cube.pcd
+
+# Type of Symmetry. 
+# There are 24 symmetries of a cube, and it turns out we can 
+# represent all 24 of them using 3 ordered symmetries. Note 
+# that the symmetry transforms will be applied in order of 
+# listing, which is critical in our case to get the transforms we want
+$ 1
+3
+0 0 1 0.0145 0.0145 0.0145 4
+0 1 0 0.0145 0.0145 0.0145 2
+-1 1 1 0.0145 0.0145 0.0145 3
+
+# Type of Guess function. 
+# As our object is made up of planes, we will use planes to 
+# guess its initial pose
+& 2
+[0 0 1 -0.029; 0 0 -1 0; 1 0 0 -0.029; -1 0 0 0; 0 1 0 -0.029; 0 -1 0 0]
+[1 3 5; 1 3 6; 1 4 5; 1 4 6; 2 3 5; 2 3 6; 2 4 5; 2 4 6]
+
+
+# This is the end of the file
+!

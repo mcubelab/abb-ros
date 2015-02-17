@@ -1,0 +1,60 @@
+<launch>
+
+<!--
+
+    <param name="sideKinect/driver/depth_time_offset" value="-0.13" />
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="device_id" value="B00366212349051B"/>
+    <arg name="camera" value="sideKinect" />
+    <arg name="rgb_camera_info_url" value="package://objRec_comm/camera_calibration/rgb_sideKinect.yaml" />
+    <arg name="depth_camera_info_url" value="package://objRec_comm/camera_calibration/depth_sideKinect.yaml" />
+    </include>
+
+    <rosparam command="load" file="$(find parameters)/objRecParams.yaml"/>
+    <node pkg="objRec_node" type="objRec_node" name="objRec_node" output="screen"/>
+    <rosparam command="load" file="$(find parameters)/handRecParams.yaml"/>
+    <node pkg="handRec_node" type="handRec_node" name="handRec_node" output="screen"/>
+
+-->
+
+    <rosparam command="load" file="$(find parameters)/objRecParams.yaml"/>
+    <rosparam command="load" file="$(find parameters)/tableVisionParams.yaml"/>
+
+    <param name="upperLeftKinect/driver/depth_time_offset" value="-0.13" />
+    <param name="upperRightKinect/driver/depth_time_offset" value="-0.13" />
+    <param name="upperCenterKinect/driver/depth_time_offset" value="-0.13" />
+    <param name="lowerCenterKinect/driver/depth_time_offset" value="-0.13" />
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="device_id" value="A00363816564046A"/>
+    <arg name="camera" value="upperLeftKinect" />
+    <arg name="rgb_camera_info_url" value="package://objRec_comm/camera_calibration/rgb_upperLeftKinect.yaml" />
+    <arg name="depth_camera_info_url" value="package://objRec_comm/camera_calibration/depth_upperLeftKinect.yaml" />
+    </include>
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="device_id" value="1@11"/>
+    <arg name="camera" value="upperRightKinect" />
+    <arg name="rgb_camera_info_url" value="package://objRec_comm/camera_calibration/rgb_upperRightKinect.yaml" />
+    <arg name="depth_camera_info_url" value="package://objRec_comm/camera_calibration/depth_upperRightKinect.yaml" />
+    </include>
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="device_id" value="2@0"/>
+    <arg name="camera" value="upperCenterKinect" />
+    <arg name="rgb_camera_info_url" value="package://objRec_comm/camera_calibration/rgb_upperCenterKinect.yaml" />
+    <arg name="depth_camera_info_url" value="package://objRec_comm/camera_calibration/depth_upperCenterKinect.yaml" />
+    </include>
+
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+    <arg name="device_id" value="1@12"/>
+    <arg name="camera" value="lowerCenterKinect" />
+    <arg name="rgb_camera_info_url" value="package://objRec_comm/camera_calibration/rgb_lowerCenterKinect.yaml" />
+    <arg name="depth_camera_info_url" value="package://objRec_comm/camera_calibration/depth_lowerCenterKinect.yaml" />
+    </include>
+
+    <node pkg="objRec_node" type="objRec_node" name="objRec_node" output="screen"/>
+    <node pkg="tableVision_node" type="tableVision_node" name="tableVision_node" output="screen"/>
+</launch>

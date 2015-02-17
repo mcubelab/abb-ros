@@ -1,0 +1,19 @@
+<package>
+  <description brief="brain_node">
+
+     brain_node
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/brain_node</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="matlab_comm"/>
+  <depend package="brain_comm"/>
+  <depend package="logger_comm"/>
+
+</package>
+
+

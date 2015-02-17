@@ -1,0 +1,15 @@
+# This service moves the robot to different views, saves point clouds, sets
+# up bounds for where the hand is in the images, and then calls a service
+# to calculate the object pose, and returns that pose in the frame of the
+# hand.
+
+geometry_msgs/PoseStamped handPose # The poses to move the hand to and take pictures
+int64 objNum                      # What object to look for
+---
+
+geometry_msgs/PoseStamped result  # A stamped pose message of where the object is with respect to the hand
+
+string filename                # log file containing what happened
+
+int64 ret
+string msg

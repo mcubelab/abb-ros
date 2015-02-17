@@ -1,0 +1,17 @@
+<package>
+  <description brief="logger_comm">
+
+     logger_comm
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/logger_comm</url>
+  <depend package="roscpp"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -llogger_comm"/>
+  </export>
+</package>
+
+

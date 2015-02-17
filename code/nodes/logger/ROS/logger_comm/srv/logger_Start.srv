@@ -1,0 +1,7 @@
+# Service to start logging the state of the system to file
+int64 id         # Experiment id (added to the first line of the log file).
+string folder    # Folder where to save it (relative to logFolder/log)
+---
+string filename  # Complete name of the logFile (relative to the logFolder)
+int64 ret        # Set to 1 (success) or 0 (error)
+string msg       # Error description

@@ -1,0 +1,19 @@
+<package>
+  <description brief="sense_data">
+
+     sense_data
+
+  </description>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sense_data</url>
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="logger_comm"/>
+  <depend package="brain_comm"/>
+  <depend package="sense_comm"/>
+
+</package>
+
+

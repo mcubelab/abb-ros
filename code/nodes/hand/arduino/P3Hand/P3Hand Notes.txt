@@ -1,0 +1,7 @@
+P3 Hand Notes
+
+With the palm installed, there are just slightly more than 30,000 (~30,100) motor angles between the fully open and fully closed positions.
+
+The motor is zeroed at the position it's in when the Arduino is powered on. 
+
+Do not unplug the Arduino from the computer while it's streaming data. This has crashed the computer a couple times. 

@@ -1,0 +1,17 @@
+<package>
+  <description brief="serialPort">
+
+     serialPort
+
+  </description>
+  <author>Robbie Paolini</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/serialPort</url>
+  <depend package="roscpp"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lserialPort"/>
+  </export>
+</package>
+
+

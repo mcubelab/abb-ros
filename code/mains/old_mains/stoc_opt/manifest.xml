@@ -1,0 +1,18 @@
+<package>
+  <description brief="stoc_opt">
+
+     stoc_opt
+
+  </description>
+  <author>Simple Hands Team</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/stoc_opt</url>
+  <depend package="roscpp"/>
+  <depend package="matlab_comm"/>
+  <depend package="robot_comm"/>
+  <depend package="matVec"/>
+
+</package>
+
+

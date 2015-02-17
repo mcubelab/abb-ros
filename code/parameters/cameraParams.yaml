@@ -1,0 +1,19 @@
+reset_on_open: true
+video_mode: 640x480_rgb8
+iso_speed: 800
+frame_rate: 7.5
+use_ros_time: true
+
+auto_brightness: 3
+brightness: 0.0
+auto_exposure: 0
+auto_sharpness: 0
+auto_white_balance: 0
+auto_hue: 0
+auto_saturation: 0
+auto_gamma: 0
+auto_shutter: 3
+shutter: 500.0
+auto_gain: 3
+gain: 56
+

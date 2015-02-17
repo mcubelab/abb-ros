@@ -1,0 +1,8 @@
+#Service to calibrate the hand
+# Number of fingers defined in hand_comm.h
+int64 fast       # Fast Calibrate if 1, conservative calibrate if 0
+---
+int64 encMotor   # Motor encoder
+int64[] enc      # List of finger encoders
+int64 ret        # Set to 1 (success) or 0 (error)
+string msg       # Error description

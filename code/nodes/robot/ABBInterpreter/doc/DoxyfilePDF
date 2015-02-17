@@ -1,0 +1,39 @@
+PROJECT_NAME           = ABBInterpreter
+PROJECT_NUMBER         = 1.0
+OUTPUT_DIRECTORY       = doc
+OUTPUT_LANGUAGE        = English
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = /Users/Alberto/Documents/Work/GPH/4-systemArchitecture/control/robotController/ABBInterpreter
+TAB_SIZE               = 4
+ALIASES                =
+
+#Documentation generation
+GENERATE_LATEX         = YES
+GENERATE_HTML	       = NO
+OPTIMIZE_OUTPUT_FOR_C  = NO
+BUILTIN_STL_SUPPORT    = YES
+EXTRACT_ALL            = YES
+HIDE_IN_BODY_DOCS      = YES 
+SORT_MEMBER_DOCS       = YES
+SORT_MEMBERS_CTORS_1ST = NO
+SORT_GROUP_NAMES       = YES
+QUIET                  = YES
+INPUT                  = src/ 
+RECURSIVE              = YES
+EXCLUDE                =
+SOURCE_BROWSER         = NO
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+ALPHABETICAL_INDEX     = YES
+
+#Latex output configuration
+COMPACT_LATEX          = NO
+PAPER_TYPE             = letter
+EXTRA_PACKAGES         =
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
+LATEX_BATCHMODE        = YES
+LATEX_HIDE_INDICES     = NO
+
+
+

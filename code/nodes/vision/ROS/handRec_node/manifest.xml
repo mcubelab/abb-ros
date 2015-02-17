@@ -1,0 +1,20 @@
+<package>
+  <description brief="handRec_node">
+
+     handRec_node
+
+  </description>
+  <author>Robbie Paolini</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/handRec_node</url>
+  <depend package="roscpp"/>
+  <depend package="handRec_comm"/>
+  <depend package="objRec_comm"/>
+  <depend package="robot_comm"/>
+  <depend package="hand_comm"/>
+  <depend package="matVec"/>
+
+</package>
+
+

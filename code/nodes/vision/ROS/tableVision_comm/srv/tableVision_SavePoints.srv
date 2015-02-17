@@ -1,0 +1,13 @@
+# This service allows the user to save a point cloud from the current 
+#  stream to a file. It returns the name of the file it saved it to, 
+#  and possible error information
+
+bool is_binary      # True if saving the .pcd in a binary format, false otherwise
+bool use_filter     # True if we will filter the points before we save them, false otherwise
+string cameraName
+---
+
+string filename     # The name of the file we saved the point cloud to
+int64 ret           # Whether we were successfully able to change bounds
+string msg          # Any error message associated with it
+

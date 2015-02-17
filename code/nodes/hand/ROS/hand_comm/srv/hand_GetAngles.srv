@@ -1,0 +1,7 @@
+# Service to Get the pose of the hand
+# number of fingers defined in hand_comm.h
+---
+float64 angleMotor   # Motor angle
+float64[] angle      # Finger angles
+int64 ret            # Set to 1 (success) or 0 (error)
+string msg           # Error description

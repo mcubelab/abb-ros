@@ -1,0 +1,5 @@
+# ping the palm calibration service
+---
+int32 failure   # Set to 0 (success) or a numeric error code.
+string msg      # Error description
+

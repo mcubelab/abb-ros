@@ -1,0 +1,29 @@
+<package>
+  <description brief="droop">
+
+     droop
+
+  </description>
+  <author>annie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/droop</url>
+
+  <depend package="roscpp"/>
+  <depend package="matVec"/>
+  <depend package="robot_comm"/>
+  <depend package="robotiq_comm"/> 
+  <depend package="util_comm"/>
+  <depend package="regraspComm" />
+  <depend package="matlab_comm" />
+  <depend package="objRec_comm" />
+  <depend package="tableVision_comm" />
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lgeometry_tools"/>
+  </export>
+
+
+</package>
+
+
