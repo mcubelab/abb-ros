@@ -1,1 +1,8 @@
 build/
+bin/
+lib/
+msg_gen/
+msg/
+srv/
+srv_gen/
+
