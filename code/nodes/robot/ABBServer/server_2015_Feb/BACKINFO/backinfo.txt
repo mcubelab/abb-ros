@@ -1,0 +1,75 @@
+#
+# Generated backup file, do not edit.
+#
+# Originally at: /hd0a/TEMP/b0fe654b
+# 15-02-14  00:06:23
+#
+>>SYSTEM_ID:
+12-02362
+
+>>PRODUCTS_ID:
+RobotWare Version: 5.61.1001.01
+
+  RW Control module key
+  RobotWare OS and English
+  644-2 German
+  645-3 Spanish
+  709-x DeviceNet
+  709-1 DeviceNet m/s
+  604-1 MultiMove Coordinated
+  SingleProcess
+  608-1 World Zones
+  613-1 Collision Detection
+  614-1 FTP and NFS client
+  616-1 PC Interface
+  617-1 FlexPendant Interface
+  897-1 Robot Reference Interface
+  RW Drive module 1 key
+  ABB standard manipulator
+  IRB 120
+  120T-0.58/3
+  Drive System 09 120/140/1400/260
+  No additional drive
+  RW Drive module 2 key
+  ABB standard manipulator
+  IRB 120
+  120T-0.58/3
+  Drive System 09 120/140/1400/260
+  No additional drive
+
+>>ROBOT_TYPE:
+120T-0.58/3
+120T-0.58/3
+
+>>HOME:
+All public files and directories
+
+>>SYSPAR:
+SYS.cfg
+PROC.cfg
+EIO.cfg
+SIO.cfg
+MOC.cfg
+MMC.cfg
+
+
+>>TASK1: (T_ROB1,,)
+SYSMOD/user.sys @ user.sys
+PROGMOD/SERVER.mod @ server.mod
+PROGMOD/SPECIAL_COMMANDS.mod @ special_commands.mod
+
+>>TASK2: (T_ROB2,,)
+SYSMOD/user.sys @ user.sys
+PROGMOD/SERVER.mod @ server.mod
+PROGMOD/SPECIAL_COMMANDS.mod @ special_commands.mod
+
+>>TASK3: (LOGGER1,,)
+SYSMOD/user.sys @ user.sys
+PROGMOD/LOGGER.mod @ logger.mod
+
+>>TASK4: (LOGGER2,,)
+SYSMOD/user.sys @ user.sys
+PROGMOD/LOGGER.mod @ logger.mod
+
+
+>>EOF:

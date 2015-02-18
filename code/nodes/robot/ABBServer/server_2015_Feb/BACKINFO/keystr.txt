@@ -1,0 +1,4 @@
+#Loaded keys in C:\Users\mcube\Documents\RobotStudio\Systems\mCube2\INTERNAL\keystr.txt:
+kgAAASWLoudAAAQAAhAUAh2QAr
+-FrqOd8GVru	1
+wBnmKZ4CRny	2
