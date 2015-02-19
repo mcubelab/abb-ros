@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>ABBInterpreter: /home/mcube/hands_MLab/code/nodes/robot/ABBInterpreter/src/ABBInterpreter.h File Reference</title>
+<title>ABBInterpreter: /home/mcube/apc/ros_ws/abb-ros/code/nodes/robot/ABBInterpreter/src/ABBInterpreter.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_75b82e7e4a5feb05200b9ad7adf06257.html">home</a></li><li class="navelem"><a class="el" href="dir_df224360e4fcdb4dcd8ba3563cf8131e.html">mcube</a></li><li class="navelem"><a class="el" href="dir_a2496ff9160bbbb4f319c0261c1959fe.html">hands_MLab</a></li><li class="navelem"><a class="el" href="dir_449ee5571b75bbe8c63394f159d4686a.html">code</a></li><li class="navelem"><a class="el" href="dir_71d4c9468787ef8793883865da18b42f.html">nodes</a></li><li class="navelem"><a class="el" href="dir_1ecfb5a1ee934e9cc87b9b8bc6dc898d.html">robot</a></li><li class="navelem"><a class="el" href="dir_c3268ec86a98f69f286190ea49e4bd33.html">ABBInterpreter</a></li><li class="navelem"><a class="el" href="dir_0f916e26742501cc03ff9244f0dda329.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_75b82e7e4a5feb05200b9ad7adf06257.html">home</a></li><li class="navelem"><a class="el" href="dir_df224360e4fcdb4dcd8ba3563cf8131e.html">mcube</a></li><li class="navelem"><a class="el" href="dir_cbbaae161513296401b128a1c43020b9.html">apc</a></li><li class="navelem"><a class="el" href="dir_aa7ebe882fb0f8b83f323509a371fa9e.html">ros_ws</a></li><li class="navelem"><a class="el" href="dir_cb348873d5e10df200891d0b501dee02.html">abb-ros</a></li><li class="navelem"><a class="el" href="dir_88e6d79bfd52ba37aed3a47952ee6406.html">code</a></li><li class="navelem"><a class="el" href="dir_07ddfd1cb612e0468448b4764e8bb0d6.html">nodes</a></li><li class="navelem"><a class="el" href="dir_5c808e97f54ccfb28bb74a83f206dec0.html">robot</a></li><li class="navelem"><a class="el" href="dir_372b85ecf0c801b5ab89e5ac3230a849.html">ABBInterpreter</a></li><li class="navelem"><a class="el" href="dir_4e898bd96733f9aa78f2e5798c86a5e9.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -95,6 +95,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;string&gt;</code><br/>
 <code>#include &quot;math.h&quot;</code><br/>
 <code>#include &lt;cstdio&gt;</code><br/>
+<code>#include &lt;vector&gt;</code><br/>
 </div>
 <p><a href="ABBInterpreter_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -135,6 +136,12 @@ Functions</h2></td></tr>
 <tr class="separator:ab60868a1e343b22fdf98d175ff925499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7c4e19a4f4f171e0e8be83b03c59b46"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#ae7c4e19a4f4f171e0e8be83b03c59b46">ABBInterpreter::closeConnection</a> (int idCode=0)</td></tr>
 <tr class="separator:ae7c4e19a4f4f171e0e8be83b03c59b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4968d70924afdbd9a3c8619978e6fb27"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a4968d70924afdbd9a3c8619978e6fb27">ABBInterpreter::addJointPosBuffer</a> (double q1, double q2, double q3, double q4, double q5, double q6, int idCode)</td></tr>
+<tr class="separator:a4968d70924afdbd9a3c8619978e6fb27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace3889a4d4057783e7af62a0eadc0d9e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#ace3889a4d4057783e7af62a0eadc0d9e">ABBInterpreter::clearJointPosBuffer</a> (int idCode)</td></tr>
+<tr class="separator:ace3889a4d4057783e7af62a0eadc0d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5976058830a5f5adc3e8cff4b65857"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a6f5976058830a5f5adc3e8cff4b65857">ABBInterpreter::executeJointPosBuffer</a> (int idCode)</td></tr>
+<tr class="separator:a6f5976058830a5f5adc3e8cff4b65857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a638bddf51768006d007bcf78bfbd9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#af4a638bddf51768006d007bcf78bfbd9">ABBInterpreter::parseCartesian</a> (string msg, double *x, double *y, double *z, double *q0, double *qx, double *qy, double *qz)</td></tr>
 <tr class="separator:af4a638bddf51768006d007bcf78bfbd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97a7dfb72ec053268c20864a6b3abec7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a97a7dfb72ec053268c20864a6b3abec7">ABBInterpreter::parseJoints</a> (string msg, double *joint1, double *joint2, double *joint3, double *joint4, double *joint5, double *joint6)</td></tr>
@@ -143,7 +150,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 13 2015 11:04:30 for ABBInterpreter by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 19 2015 12:21:54 for ABBInterpreter by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

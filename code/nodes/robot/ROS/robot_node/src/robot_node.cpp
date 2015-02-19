@@ -237,7 +237,13 @@ void RobotController::advertiseServices()
       &RobotController::robot_SetDefaults, this);
   handle_robot_Approach = node->advertiseService(robotname + "_Approach",
       &RobotController::robot_Approach, this);
-  
+      // buffer code
+  handle_robot_Ping = node->advertiseService(robotname+"_AddJointPosBuffer", 
+      &RobotController::robot_AddJointPosBuffer, this);
+  handle_robot_Ping = node->advertiseService(robotname+"_ExecuteJointPosBuffer", 
+      &RobotController::robot_ExecuteJointPosBuffer, this);
+  handle_robot_Ping = node->advertiseService(robotname+"_ClearJointPosBuffer", 
+      &RobotController::robot_ClearJointPosBuffer, this);
 }
 
 
@@ -1026,6 +1032,68 @@ bool RobotController::setNonBlockSpeed(double tcp, double ori)
   return true;
 }
 
+
+bool RobotController::robot_AddJointPosBuffer(
+    robot_comm::robot_AddJointPosBuffer::Request& req, 
+    robot_comm::robot_AddJointPosBuffer::Response& res)
+{
+	if (addJointPosBuffer(req.j1, req.j2, req.j3, req.j4, req.j5, req.j6))
+	{
+		res.ret = 1;
+		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = 0;
+		res.msg = "ROBOT_CONTROLLER: Not able to add joint position buffer ";
+		res.msg += "the robot.";
+		return false;
+	}
+	
+}
+
+bool RobotController::robot_ExecuteJointPosBuffer(
+    robot_comm::robot_ExecuteJointPosBuffer::Request& req, 
+    robot_comm::robot_ExecuteJointPosBuffer::Response& res)
+{
+	if (executeJointPosBuffer())
+	{
+		res.ret = 1;
+		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = 0;
+		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered joint trajectories ";
+		return false;
+	}
+	
+}
+
+bool RobotController::robot_ClearJointPosBuffer(
+    robot_comm::robot_ClearJointPosBuffer::Request& req, 
+    robot_comm::robot_ClearJointPosBuffer::Response& res)
+{
+	if (clearJointPosBuffer())
+	{
+		res.ret = 1;
+		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = 0;
+		res.msg = "ROBOT_CONTROLLER: Not able to clear buffered joint trajectories ";
+		return false;
+	}
+	
+}
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////
 // Internal methods that let us execute certain robot functions without using 
 // ROS service callbacks
@@ -1115,7 +1183,6 @@ bool RobotController::setCartesianJ(double x, double y, double z,
   else
     return false;
 }
-
 
 
 // Query the robot for the current position of the robot
@@ -1465,6 +1532,71 @@ bool RobotController::is_moving()
     return do_nb_move;
   else
     return false;
+}
+
+
+// Set adds joint positions 1 configuration at a time to the joint position buffer
+bool RobotController::addJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6)
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::addJointPosBuffer(j1, j2, j3, j4, j5, j6, randNumber).c_str());
+	sendAndReceive(message,strlen(message), reply, randNumber);
+	return true;
+	
+	/* Template
+	// Command the robot to move to a given joint configuration
+    bool RobotController::setJoints(double j1, double j2, double j3, double j4,
+    double j5, double j6)
+	{
+    // We will do some collision and sanity checks here
+
+    char message[MAX_BUFFER];
+    char reply[MAX_BUFFER];
+    int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+
+    strcpy(message, ABBInterpreter::setJoints(j1, j2, j3, j4, j5, j6, 
+        randNumber).c_str());
+
+    if (sendAndReceive(message, strlen(message), reply, randNumber))
+    {
+    // If the move was successful, keep track of the last commanded position
+    curGoalJ[0] = j1;
+    curGoalJ[1] = j2;
+    curGoalJ[2] = j3;
+    curGoalJ[3] = j4;
+    curGoalJ[4] = j5;
+    curGoalJ[5] = j6;
+    return true;
+    }
+    else
+    return false;
+    }	
+	*/
+	
+}
+
+// Execute the joint configurations added to the buffer previously
+bool RobotController::executeJointPosBuffer()
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::executeJointPosBuffer(randNumber).c_str());
+	sendAndReceive(message,strlen(message), reply, randNumber);
+	return true;
+}
+
+// Clear the joint position buffer
+bool RobotController::clearJointPosBuffer()
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
+	sendAndReceive(message,strlen(message), reply, randNumber);
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////

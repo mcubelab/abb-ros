@@ -56,8 +56,6 @@ string ABBInterpreter::setCartesian(double x, double y, double z, double q0, dou
   return (msg);
 }
 
-
-
 /**
   * Formats message to set the cartesian coordinates of the ABB robot, but
   * using a joint move to get there.
@@ -379,6 +377,157 @@ string ABBInterpreter::setZone(bool fine, double tcp_mm, double ori_mm, double o
 
   return (msg);
 }
+
+/*
+string ABBInterpreter::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode)
+{
+	//appends single target to the buffer
+	// move will execute at current speed (which you can change between addBuffer calls)
+	
+	char buff[20];
+	string msg("30 ");//instruction code;
+	sprintf(buff,"%.3d ",idCode); //identification code
+	msg += buff;
+	
+	sprintf(buff,"%+08.1lf ",x);  msg += buff;
+	sprintf(buff,"%+08.1lf ",y);  msg += buff;
+    sprintf(buff,"%+08.1lf ",z);  msg += buff;
+	sprintf(buff,"%+08.5lf ",q0); msg += buff;
+	sprintf(buff,"%+08.5lf ",qx); msg += buff;
+	sprintf(buff,"%+08.5lf ",qy); msg += buff;
+	sprintf(buff,"%+08.5lf ",qz); msg += buff;
+	
+	msg += "#";
+	
+	return (msg);
+}
+*/
+
+/* Here lies the setBuffer code for position of end effector - Dont need it for joint control
+string ABBInterpreter::setBuffer(PosList poslist) //Need help on this one, dont really understand it
+{
+	// pos ---  vector<double>
+	// #include <vector>
+	// typedef std::vector<double> Pos;
+	// typedef std::vector<Pos> PosList;
+	//
+	// poslist[i][j]
+	
+	for (int i=1, i<sizeof(poslist), i++)
+	{
+		msg += addJointPosBuffer(poslist[i][1], poslist[i][2], poslist[i][3],
+						         poslist[i][4], poslist[i][5], poslist[i][6]);
+	}
+	    
+	
+}
+*/
+
+/*	
+string ABBInterpreter::clearBuffer()
+{
+	string msg("31 ");
+	msg += "#";
+	return (msg);
+	
+}
+*/
+/*
+string ABBInterpreter::lenBuffer()
+{
+	string msg("32 ");
+	msg += "#";
+	return (msg);
+		
+}
+*/
+
+/*
+string ABBInterpreter::executeBuffer()
+{
+	string msg("33 ");
+	msg += "#";
+	return (msg);
+
+}
+*/
+
+string ABBInterpreter::addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode)
+{
+	char buff[20];
+	string msg("37 ");
+	sprintf(buff,"%.3d ",idCode); //identification code
+	msg += buff;
+	sprintf(buff,"%+08.1lf ",q1);  msg += buff;
+	sprintf(buff,"%+08.1lf ",q2);  msg += buff;
+    sprintf(buff,"%+08.1lf ",q3);  msg += buff;
+    sprintf(buff,"%+08.1lf ",q4);  msg += buff;
+	sprintf(buff,"%+08.1lf ",q5);  msg += buff;
+    sprintf(buff,"%+08.1lf ",q6);  msg += buff;
+    msg += "#";
+	return (msg);
+	
+	/*    def addJointPosBuffer(self,joint_pos):
+	#appends single joint position to the buffer
+	if len(joint_pos) == 6:
+            msg = "37 "
+            msg = msg + format(joint_pos[0],"+08.2f")+" "+ format(joint_pos[1],"+08.2f")+" "+ format(joint_pos[2],"+08.2f")+" "+ format(joint_pos[3],"+08.2f")+" "+ format(joint_pos[4],"+08.2f")+" "+ format(joint_pos[5],"+08.2f")+" #"
+            if self.verbose: print 'addJointBuffer:',msg
+            self.robsock.send(msg)
+            data = self.robsock.recv(self.BUFLEN)
+            time.sleep(self.idel)
+            return data
+        else:
+            return False
+     */
+ }
+        
+string ABBInterpreter::clearJointPosBuffer(int idCode)
+{
+	char buff[20];
+	string msg("38 ");
+	sprintf(buff,"%.3d ",idCode); //identification code
+    msg += buff;
+	msg += "#";
+	return (msg);
+	
+	/*def clearJointPosBuffer(self):
+         msg = "38 #"
+         self.robsock.send(msg)
+         data = self.robsock.recv(self.BUFLEN)
+         return data
+    */
+}
+
+/*
+string ABBInterpreter::lenJointPosBuffer(int idCode)
+{
+	string msg("39 ");
+	sprintf(buff,"%.3d ",idCode); //identification code
+    msg += buff;
+	msg += "#";
+	return (msg);
+	
+}
+*/
+
+string ABBInterpreter::executeJointPosBuffer(int idCode)
+{
+	char buff[20];
+	string msg("40 ");
+	sprintf(buff,"%.3d ",idCode); //identification code
+    msg += buff;
+	msg += "#";
+	return (msg);
+	
+	/*
+	def executeJointPosBuffer(self):
+        msg = "40 #"
+        self.robsock.send(msg)
+        data = self.robsock.recv(self.BUFLEN)
+        return data
+    */
+}  
 
 /**
   * Formats message to call special command.

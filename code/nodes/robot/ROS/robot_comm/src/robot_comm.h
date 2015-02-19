@@ -26,6 +26,9 @@
 #include <robot_comm/robot_GetIK.h>
 #include <robot_comm/robot_GetFK.h>
 #include <robot_comm/robot_Approach.h>
+#include <robot_comm/robot_AddJointPosBuffer.h>
+#include <robot_comm/robot_ExecuteJointPosBuffer.h>
+#include <robot_comm/robot_ClearJointPosBuffer.h>
 
 #include <robot_comm/robot_CartesianLog.h>
 #include <robot_comm/robot_JointsLog.h>
@@ -134,6 +137,10 @@ class RobotComm
     bool GetJoints(double &j1, double &j2, double &j3, 
         double &j4, double &j5, double &j6); 
     bool IsMoving();
+    
+    bool AddJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6);
+    bool ExecuteJointPosBuffer();
+    bool ClearJointPosBuffer();
 
 
     bool GetIK(const HomogTransf pose, double joints[NUM_JOINTS]);
@@ -183,6 +190,10 @@ class RobotComm
     ros::ServiceClient handle_robot_GetIK;
     ros::ServiceClient handle_robot_GetFK;
     ros::ServiceClient handle_robot_Approach;
+    
+    ros::ServiceClient handle_robot_AddJointPosBuffer;
+    ros::ServiceClient handle_robot_ExecuteJointPosBuffer;
+    ros::ServiceClient handle_robot_ClearJointPosBuffer;
 
     // ROS services
     robot_comm::robot_Ping robot_Ping_srv;
@@ -206,6 +217,10 @@ class RobotComm
     robot_comm::robot_GetIK robot_GetIK_srv;
     robot_comm::robot_GetFK robot_GetFK_srv;
     robot_comm::robot_Approach robot_Approach_srv;
+    
+    robot_comm::robot_AddJointPosBuffer robot_AddJointPosBuffer_srv;
+    robot_comm::robot_ExecuteJointPosBuffer robot_ExecuteJointPosBuffer_srv;
+    robot_comm::robot_ClearJointPosBuffer robot_ClearJointPosBuffer_srv;
 };
 
 #endif //ROBOT_COMM_H

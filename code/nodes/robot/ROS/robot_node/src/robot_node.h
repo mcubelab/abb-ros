@@ -127,6 +127,17 @@ class RobotController
   bool robot_Approach(
       robot_comm::robot_Approach::Request& req,
       robot_comm::robot_Approach::Response& res);
+  // Buffer Comm declerations:
+  bool robot_AddJointPosBuffer(
+	  robot_comm::robot_AddJointPosBuffer::Request& req,
+	  robot_comm::robot_AddJointPosBuffer::Response& res);
+  bool robot_ExecuteJointPosBuffer(
+	  robot_comm::robot_ExecuteJointPosBuffer::Request& req,
+	  robot_comm::robot_ExecuteJointPosBuffer::Response& res);
+  bool robot_ClearJointPosBuffer(
+	  robot_comm::robot_ClearJointPosBuffer::Request& req,
+	  robot_comm::robot_ClearJointPosBuffer::Response& res);
+	  
 
   // Advertise Services and Topics
   void advertiseServices();
@@ -169,6 +180,11 @@ class RobotController
     double q0, double qx, double qy, double qz);
   bool setJoints(double j1, double j2, double j3, 
       double j4, double j5, double j6);
+      
+  // Buffer Commands for joint positions
+  bool addJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6);
+  bool executeJointPosBuffer();
+  bool clearJointPosBuffer();
 
   // Functions that compute our distance from the current position to the goal
   double posDistFromGoal();
@@ -214,6 +230,9 @@ class RobotController
   ros::ServiceServer handle_robot_IsMoving;
   ros::ServiceServer handle_robot_SetDefaults;
   ros::ServiceServer handle_robot_Approach;
+  ros::ServiceServer handle_robot_AddJointPosBuffer;
+  ros::ServiceServer handle_robot_ExecuteJointPosBuffer;
+  ros::ServiceServer handle_robot_ClearJointPosBuffer;
  
   // Helper function for communicating with robot server
   bool sendAndReceive(char *message, int messageLength, 
@@ -235,7 +254,7 @@ class RobotController
   bool setZone(int z);
   bool stop_nb();
   bool setComm(int mode);
-
+  
   // Check if robot is currently moving or not
   bool is_moving();
 

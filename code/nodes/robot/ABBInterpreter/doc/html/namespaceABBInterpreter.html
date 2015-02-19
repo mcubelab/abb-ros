@@ -120,12 +120,94 @@ Functions</h2></td></tr>
 <tr class="separator:ab60868a1e343b22fdf98d175ff925499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7c4e19a4f4f171e0e8be83b03c59b46"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#ae7c4e19a4f4f171e0e8be83b03c59b46">closeConnection</a> (int idCode=0)</td></tr>
 <tr class="separator:ae7c4e19a4f4f171e0e8be83b03c59b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4968d70924afdbd9a3c8619978e6fb27"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a4968d70924afdbd9a3c8619978e6fb27">addJointPosBuffer</a> (double q1, double q2, double q3, double q4, double q5, double q6, int idCode)</td></tr>
+<tr class="separator:a4968d70924afdbd9a3c8619978e6fb27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace3889a4d4057783e7af62a0eadc0d9e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#ace3889a4d4057783e7af62a0eadc0d9e">clearJointPosBuffer</a> (int idCode)</td></tr>
+<tr class="separator:ace3889a4d4057783e7af62a0eadc0d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5976058830a5f5adc3e8cff4b65857"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a6f5976058830a5f5adc3e8cff4b65857">executeJointPosBuffer</a> (int idCode)</td></tr>
+<tr class="separator:a6f5976058830a5f5adc3e8cff4b65857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a638bddf51768006d007bcf78bfbd9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#af4a638bddf51768006d007bcf78bfbd9">parseCartesian</a> (string msg, double *x, double *y, double *z, double *q0, double *qx, double *qy, double *qz)</td></tr>
 <tr class="separator:af4a638bddf51768006d007bcf78bfbd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97a7dfb72ec053268c20864a6b3abec7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceABBInterpreter.html#a97a7dfb72ec053268c20864a6b3abec7">parseJoints</a> (string msg, double *joint1, double *joint2, double *joint3, double *joint4, double *joint5, double *joint6)</td></tr>
 <tr class="separator:a97a7dfb72ec053268c20864a6b3abec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a4968d70924afdbd9a3c8619978e6fb27"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ABBInterpreter::addJointPosBuffer </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q4</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q5</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>q6</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idCode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00455">455</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ace3889a4d4057783e7af62a0eadc0d9e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ABBInterpreter::clearJointPosBuffer </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idCode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00485">485</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae7c4e19a4f4f171e0e8be83b03c59b46"></a>
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +230,25 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00444">444</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00593">593</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6f5976058830a5f5adc3e8cff4b65857"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ABBInterpreter::executeJointPosBuffer </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idCode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00514">514</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -174,7 +274,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00193">193</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00191">191</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -232,7 +332,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00164">164</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00162">162</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -296,7 +396,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00138">138</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00136">136</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +422,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00209">209</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00207">207</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -401,7 +501,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the message was received correctly or not by the ABB robot. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00468">468</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00617">617</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -473,7 +573,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the message was received correctly or not by the ABB robot. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00490">490</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00639">639</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -657,7 +757,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00075">75</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00073">73</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -729,7 +829,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00113">113</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00111">111</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -773,7 +873,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00304">304</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00302">302</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -852,7 +952,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00232">232</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00230">230</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -889,7 +989,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00424">424</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00573">573</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -968,7 +1068,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00270">270</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00268">268</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -1026,7 +1126,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00363">363</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00361">361</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
@@ -1098,14 +1198,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String to be sent to ABB server. </dd></dl>
 
-<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00394">394</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
+<p>Definition at line <a class="el" href="ABBInterpreter_8cpp_source.html#l00543">543</a> of file <a class="el" href="ABBInterpreter_8cpp_source.html">ABBInterpreter.cpp</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 13 2015 11:04:30 for ABBInterpreter by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 19 2015 12:21:54 for ABBInterpreter by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

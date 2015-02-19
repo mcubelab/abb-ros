@@ -5,6 +5,7 @@
 #include <string>
 #include "math.h"
 #include <cstdio>
+#include <vector>
 
 using namespace std;
 
@@ -30,6 +31,12 @@ namespace ABBInterpreter
   string specialCommand(int command, double param1, double param2, double param3, double param4, double param5, int idCode=0);
   string setVacuum(int vacuum=0, int idCode=0);
   string closeConnection(int idCode=0);
+  // Buffers
+  string addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode);
+  string clearJointPosBuffer(int idCode);
+  string executeJointPosBuffer(int idCode);
+  
+  
   int parseCartesian(string msg, double *x, double *y, double *z,
       double *q0, double *qx, double *qy, double *qz);
   int parseJoints(string msg, double *joint1, double *joint2, 
