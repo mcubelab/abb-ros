@@ -238,11 +238,11 @@ void RobotController::advertiseServices()
   handle_robot_Approach = node->advertiseService(robotname + "_Approach",
       &RobotController::robot_Approach, this);
       // buffer code
-  handle_robot_Ping = node->advertiseService(robotname+"_AddJointPosBuffer", 
+  handle_robot_AddJointPosBuffer = node->advertiseService(robotname+"_AddJointPosBuffer", 
       &RobotController::robot_AddJointPosBuffer, this);
-  handle_robot_Ping = node->advertiseService(robotname+"_ExecuteJointPosBuffer", 
+  handle_robot_ExecuteJointPosBuffer = node->advertiseService(robotname+"_ExecuteJointPosBuffer", 
       &RobotController::robot_ExecuteJointPosBuffer, this);
-  handle_robot_Ping = node->advertiseService(robotname+"_ClearJointPosBuffer", 
+  handle_robot_ClearJointPosBuffer = node->advertiseService(robotname+"_ClearJointPosBuffer", 
       &RobotController::robot_ClearJointPosBuffer, this);
 }
 
