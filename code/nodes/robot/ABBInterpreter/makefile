@@ -20,6 +20,7 @@ all: $(LIB) include clean doc
 #all: $(LIB) include clean doc
 
 $(LIB): $(OBJ)
+	mkdir -p lib
 	ar -r $(LIB) $(OBJ)
 
 #libraries
@@ -31,7 +32,7 @@ include: $(LIB)
 	cp src/ABBInterpreter.h include/ABBInterpreter.h
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ) $(LIB) doc/html
 	+make -C $(SDIR)/planarMotionDemo clean
 
 doc: $(LIB)
