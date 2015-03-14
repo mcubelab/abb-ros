@@ -1978,7 +1978,6 @@ void RobotController::logCallback(const ros::TimerEvent&)
       js.header.stamp = ros::Time::now();
       handle_robot_RosJointState.publish(js);
     }
-    
   }
 }
 
