@@ -184,6 +184,8 @@ bool RobotController::defaultRobotConfiguration()
 // Advertise the topics that the robot node will be broadcasting
 void RobotController::advertiseTopics()
 {
+  handle_robot_RosJointState = 
+    node->advertise<sensor_msgs::JointState>(robotname + "_RosJointState", 100);
   handle_robot_CartesianLog = 
     node->advertise<robot_comm::robot_CartesianLog>(robotname + "_CartesianLog", 100);
   handle_robot_JointsLog = 
@@ -1956,6 +1958,27 @@ void RobotController::logCallback(const ros::TimerEvent&)
       curForce[5] = msgForce.tz;
       pthread_mutex_unlock(&forceUpdateMutex);
     }
+    
+    //prepare joint state message
+    if(jointsModif){
+      sensor_msgs::JointState js;
+      js.position.push_back(msgJoints.j1*DEG2RAD);
+      js.position.push_back(msgJoints.j2*DEG2RAD);
+      js.position.push_back(msgJoints.j3*DEG2RAD);
+      js.position.push_back(msgJoints.j4*DEG2RAD);
+      js.position.push_back(msgJoints.j5*DEG2RAD);
+      js.position.push_back(msgJoints.j6*DEG2RAD);
+        
+      js.name.push_back("joint1");
+      js.name.push_back("joint2");
+      js.name.push_back("joint3");
+      js.name.push_back("joint4");
+      js.name.push_back("joint5");
+      js.name.push_back("joint6");
+      js.header.stamp = ros::Time::now();
+      handle_robot_RosJointState.publish(js);
+    }
+    
   }
 }
 

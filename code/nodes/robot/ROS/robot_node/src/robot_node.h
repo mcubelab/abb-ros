@@ -9,12 +9,14 @@
 #include <sys/socket.h>
 #include <sys/types.h> 
 #include <matVec/matVec.h>
+#include <math.h>
 
 #include "ABBInterpreter.h"
 
 //ROS specific
 #include <ros/ros.h>
 #include <robot_comm/robot_comm.h>
+#include <sensor_msgs/JointState.h>
 
 //#define MAX_BUFFER 256
 #define MAX_BUFFER 10000
@@ -206,6 +208,8 @@ class RobotController
   bool defaultRobotConfiguration();
 
   //handles to ROS stuff
+  
+  ros::Publisher handle_robot_RosJointState;
   ros::Publisher handle_robot_CartesianLog;
   ros::Publisher handle_robot_JointsLog;
   ros::Publisher handle_robot_ForceLog;

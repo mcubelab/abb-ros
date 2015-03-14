@@ -32,8 +32,11 @@ include: $(LIB)
 	cp src/ABBInterpreter.h include/ABBInterpreter.h
 
 clean:
-	rm -rf $(OBJ) $(LIB) doc/html
+	rm -rf $(OBJ) doc/html
 	+make -C $(SDIR)/planarMotionDemo clean
+
+purge: clean
+	rm -rf $(LIB)
 
 doc: $(LIB)
 	doxygen doc/DoxyfileHTML
