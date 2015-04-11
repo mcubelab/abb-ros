@@ -768,9 +768,9 @@ bool RobotController::robot_SetComm(
   {
     res.ret = 1;
     if (req.mode == NON_BLOCKING)
-      res.msg = "ROBOT_CONTROLLER: Communication set to BLOCKING.";
-    else
       res.msg = "ROBOT_CONTROLLER: Communication set to NON_BLOCKING.";
+    else
+      res.msg = "ROBOT_CONTROLLER: Communication set to BLOCKING.";
     return true;
   }
 }
@@ -1684,7 +1684,7 @@ bool RobotController::connectMotionServer(const char* ip, int port)
           sizeof(remoteSocket)) == -1)
     {
       ROS_INFO("ROBOT_CONTROLLER: Could not connect to the "
-          "ABB robot. %d",errno);
+          "ABB robot. Error number %d.",errno);
     }
     else
     {
