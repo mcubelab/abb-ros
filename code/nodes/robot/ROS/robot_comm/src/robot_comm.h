@@ -12,6 +12,7 @@
 #include <robot_comm/robot_SetWorkObject.h>
 #include <robot_comm/robot_SetZone.h>
 #include <robot_comm/robot_SetTool.h>
+#include <robot_comm/robot_SetInertia.h>
 #include <robot_comm/robot_SetComm.h>
 #include <robot_comm/robot_SetJoints.h>
 #include <robot_comm/robot_GetJoints.h>
@@ -113,6 +114,8 @@ class RobotComm
     bool SetZone(const int z);
     bool SetTool(const double x, const double y, const double z, 
         const double q0, const double qx, const double qy, const double qz);
+    bool SetInertia(const double m, const double cgx, const double cgy, 
+        const double cgz, const double ix, const double iy, const double iz);
     bool SetComm(const int mode);
     bool SetSpeed(const double tcp, const double ori);
     bool GetSpeed(double &tcp, double &ori);
@@ -120,9 +123,10 @@ class RobotComm
     bool GetWorkObject(double workObject[7]);
     bool GetTool(HomogTransf &tool);
     bool GetTool(double tool[7]);
+    bool GetInertia(double inertia[7]);
     bool GetZone(int &zone);
-    bool GetState(double &tcp, double &ori, int &zone, HomogTransf &workObject, HomogTransf &tool);
-    bool GetState(double &tcp, double &ori, int &zone, double workObject[7], double tool[7]);
+    bool GetState(double &tcp, double &ori, int &zone, HomogTransf &workObject, HomogTransf &tool, double inertia[7]);
+    bool GetState(double &tcp, double &ori, int &zone, double workObject[7], double tool[7], double inertia[7]);
     bool SetTrackDist(const double pos_dist, const double ang_dist);
     bool Stop();
     bool SetVacuum(const int mode);
@@ -176,6 +180,7 @@ class RobotComm
     ros::ServiceClient handle_robot_SetWorkObject;
     ros::ServiceClient handle_robot_SetZone;
     ros::ServiceClient handle_robot_SetTool;
+    ros::ServiceClient handle_robot_SetInertia;
     ros::ServiceClient handle_robot_SetComm;
     ros::ServiceClient handle_robot_SetJoints;
     ros::ServiceClient handle_robot_GetJoints;
@@ -203,6 +208,7 @@ class RobotComm
     robot_comm::robot_SetWorkObject robot_SetWorkObject_srv;
     robot_comm::robot_SetZone robot_SetZone_srv;
     robot_comm::robot_SetTool robot_SetTool_srv;
+    robot_comm::robot_SetInertia robot_SetInertia_srv;
     robot_comm::robot_SetComm robot_SetComm_srv;
     robot_comm::robot_SetJoints robot_SetJoints_srv;
     robot_comm::robot_GetJoints robot_GetJoints_srv;

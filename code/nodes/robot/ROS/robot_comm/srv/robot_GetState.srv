@@ -19,5 +19,12 @@ float64 toolq0
 float64 toolqx
 float64 toolqy
 float64 toolqz
+float64 toolm
+float64 toolcgx
+float64 toolcgy
+float64 toolcgz
+float64 toolix
+float64 tooliy
+float64 tooliz
 int64 ret
 string msg

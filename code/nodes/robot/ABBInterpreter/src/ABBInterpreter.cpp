@@ -254,6 +254,44 @@ string ABBInterpreter::setTool(double x, double y, double z, double q0, double q
 }
 
 /**
+  * Formats message to define the tool coordinates.
+  * @param m Mass of the tool in Kg.
+  * @param cgx X-coordinate of the CG of the tool in mm.
+  * @param cgy Y-coordinate of the CG of the tool in mm.
+  * @param cgz Z-coordinate of the CG of the tool in mm.
+  * @param ix Moment of inertia with respect to axis X.
+  * @param iy Moment of inertia with respect to axis Y.
+  * @param iz Moment of inertia with respect to axis Z.
+  * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
+  * @return String to be sent to ABB server.
+  */
+string ABBInterpreter::setInertia(double m, double cgx, double cgy, double cgz, double ix, double iy, double iz, int idCode)
+{
+  char buff[80];
+  string msg("14 ");//instruction code;
+  
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  sprintf(buff,"%+08.5lf ",m);
+  msg += buff ;
+  sprintf(buff,"%+08.1lf ",cgx);
+  msg += buff ;
+  sprintf(buff,"%+08.1lf ",cgy);
+  msg += buff ;
+  sprintf(buff,"%+08.1lf ",cgz);
+  msg += buff ;
+  sprintf(buff,"%+08.5lf ",ix);
+  msg += buff ;
+  sprintf(buff,"%+08.5lf ",iy);
+  msg += buff ;
+  sprintf(buff,"%+08.5lf ",iz);
+  msg += buff ;
+  msg += "#";
+
+  return (msg);
+}
+
+/**
   * Formats message to define the coordinates of the work object reference frame.
   * @param x X-coordinate of the work object reference frame.
   * @param y Y-coordinate of the work object reference frame.

@@ -99,6 +99,9 @@ class RobotController
   bool robot_SetTool(
       robot_comm::robot_SetTool::Request& req, 
       robot_comm::robot_SetTool::Response& res);
+  bool robot_SetInertia(
+      robot_comm::robot_SetInertia::Request& req, 
+      robot_comm::robot_SetInertia::Response& res);
   bool robot_SetWorkObject(
       robot_comm::robot_SetWorkObject::Request& req, 
       robot_comm::robot_SetWorkObject::Response& res);
@@ -223,6 +226,7 @@ class RobotController
   ros::ServiceServer handle_robot_GetFK;
   ros::ServiceServer handle_robot_Stop;
   ros::ServiceServer handle_robot_SetTool;
+  ros::ServiceServer handle_robot_SetInertia;
   ros::ServiceServer handle_robot_SetWorkObject;
   ros::ServiceServer handle_robot_SetSpeed;
   ros::ServiceServer handle_robot_GetState;
@@ -250,6 +254,8 @@ class RobotController
       double &j4, double &j5, double &j6);
   bool setTool(double x, double y, double z, 
     double q0, double qx, double qy, double qz);
+  bool setInertia(double m, double cgx, double cgy, 
+    double cgz, double ix, double iy, double iz);
   bool setWorkObject(double x, double y, double z, 
     double q0, double qx, double qy, double qz);
   bool specialCommand(int command, double param1=0, double param2=0, double param3=0, double param4=0, double param5=0);
@@ -272,6 +278,9 @@ class RobotController
   int curZone;
   Vec curToolP;
   Quaternion curToolQ;
+  int curToolM;
+  Vec curToolCG;
+  Vec curToolI;
   Vec curWorkP;
   Quaternion curWorkQ;
 

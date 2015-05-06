@@ -6,3 +6,4 @@ msg/
 srv_gen/
 
 *~
+*.pyc

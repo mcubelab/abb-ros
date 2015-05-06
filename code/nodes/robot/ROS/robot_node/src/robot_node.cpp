@@ -31,6 +31,7 @@ RobotController::~RobotController() {
   handle_robot_GetFK.shutdown();
   handle_robot_Stop.shutdown();
   handle_robot_SetTool.shutdown();
+  handle_robot_SetInertia.shutdown();
   handle_robot_SetWorkObject.shutdown();
   handle_robot_SetSpeed.shutdown();
   handle_robot_GetState.shutdown();
@@ -101,6 +102,8 @@ bool RobotController::init(std::string id)
 
   // Allocate space for all of our vectors
   curToolP = Vec(3);
+  curToolCG = Vec(3);
+  curToolI = Vec(3);
   curWorkP = Vec(3);
   curP = Vec(3);
   curGoalP = Vec(3);
@@ -125,6 +128,9 @@ bool RobotController::defaultRobotConfiguration()
 {
   double defWOx,defWOy,defWOz,defWOq0,defWOqx,defWOqy,defWOqz;
   double defTx,defTy,defTz,defTq0,defTqx,defTqy,defTqz;
+  double defTmass, defTCGx, defTCGy, defTCGz;
+  double defTIx, defTIy, defTIz; 
+
   int zone;
   double speedTCP, speedORI;
   int vacuumMode;
@@ -150,8 +156,19 @@ bool RobotController::defaultRobotConfiguration()
   node->getParam(robotname_sl + "/toolQY",defTqy);
   node->getParam(robotname_sl + "/toolQZ",defTqz);
   if (!setTool(defTx,defTy,defTz,defTq0,defTqx,defTqy,defTqz))
+      return false;
+  
+  //Inertia
+  node->getParam(robotname_sl + "/toolMass",defTmass);
+  node->getParam(robotname_sl + "/toolCGX",defTCGx);
+  node->getParam(robotname_sl + "/toolCGY",defTCGy);
+  node->getParam(robotname_sl + "/toolCGZ",defTCGz);
+  node->getParam(robotname_sl + "/toolIX",defTIx);
+  node->getParam(robotname_sl + "/toolIY",defTIy);
+  node->getParam(robotname_sl + "/toolIZ",defTIz);
+  if (!setInertia(defTmass,defTCGx,defTCGy,defTCGz,defTIx,defTIy,defTIz))
     return false;
-
+  
   //Zone
   node->getParam(robotname_sl + "/zone",zone);
   if (!setZone(zone))
@@ -216,6 +233,8 @@ void RobotController::advertiseServices()
   handle_robot_Stop = node->advertiseService(robotname + "_Stop", 
       &RobotController::robot_Stop, this);
   handle_robot_SetTool = node->advertiseService(robotname + "_SetTool", 
+      &RobotController::robot_SetTool, this);
+  handle_robot_SetInertia = node->advertiseService(robotname + "_SetInertia", 
       &RobotController::robot_SetTool, this);
   handle_robot_SetWorkObject = node->advertiseService(robotname + "_SetWorkObject", 
       &RobotController::robot_SetWorkObject, this);
@@ -727,6 +746,26 @@ bool RobotController::robot_SetTool(
   }
 }
 
+// Set the inertia of the tool of the robot
+bool RobotController::robot_SetInertia(
+    robot_comm::robot_SetInertia::Request& req, 
+    robot_comm::robot_SetInertia::Response& res)
+{
+  // Simply call our internal method to set the tool
+  if (setInertia(req.m, req.cgx, req.cgy, req.cgz, req.ix, req.iy, req.iz))
+  {
+    res.ret = 1;
+    res.msg = "ROBOT_CONTROLLER: OK.";
+    return true;
+  }
+  else
+  {
+    res.ret = 0;
+    res.msg = "ROBOT_CONTROLLER: Not able to change the inertia of the tool of the robot.";
+    return false;
+  }
+}
+
 // Set the work object of the robot
 bool RobotController::robot_SetWorkObject(
     robot_comm::robot_SetWorkObject::Request& req, 
@@ -822,6 +861,13 @@ bool RobotController::robot_GetState(
   res.toolqx = curToolQ[1];
   res.toolqy = curToolQ[2];
   res.toolqz = curToolQ[3];
+  res.toolm = curToolM;
+  res.toolcgx = curToolCG[0];
+  res.toolcgy = curToolCG[1];
+  res.toolcgz = curToolCG[2];
+  res.toolix = curToolI[0];
+  res.tooliy = curToolI[1];
+  res.tooliz = curToolI[2];
   res.workx = curWorkP[0];
   res.worky = curWorkP[1];
   res.workz = curWorkP[2];
@@ -1319,6 +1365,50 @@ bool RobotController::setTool(double x, double y, double z,
 	  node->setParam(robotname_sl + "/toolQX",qx);
 	  node->setParam(robotname_sl + "/toolQY",qy);
 	  node->setParam(robotname_sl + "/toolQZ",qz);
+	  return true;
+	}
+      else
+	return false;
+    }
+  return true;
+}
+
+// Set the tool frame of the robot
+bool RobotController::setInertia(double m, double cgx, double cgy, 
+    double cgz, double ix, double iy, double iz)
+{
+  // Only take action if the required values are different than the actual ones
+  if(m!=curToolM || cgx!=curToolCG[0] || cgy!=curToolCG[1] || cgz!=curToolCG[2] ||
+     ix!=curToolI[0] || iy!=curToolI[1] || iz!=curToolI[2])
+    {
+      // This is dangerous if we are currently executing a non-blocking move
+      if (do_nb_move)
+	return false;
+      
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::setInertia(m, cgx, cgy, cgz, ix, iy, iz, 
+					      randNumber).c_str());
+
+      if(sendAndReceive(message, strlen(message), reply, randNumber))
+	{
+	  // If the command was successful, remember our new inertia
+	  curToolM = m;
+	  curToolCG[0] = cgx;
+	  curToolCG[1] = cgy;
+	  curToolCG[2] = cgz;
+	  curToolI[0] = ix;
+	  curToolI[1] = iy;
+	  curToolI[2] = iz;
+	  // We also save it to the parameter server
+	  node->setParam(robotname_sl + "/toolMass",m);
+	  node->setParam(robotname_sl + "/toolCGX",cgx);
+	  node->setParam(robotname_sl + "/toolCGY",cgy);
+	  node->setParam(robotname_sl + "/toolCGZ",cgz);
+	  node->setParam(robotname_sl + "/toolIX",ix);
+	  node->setParam(robotname_sl + "/toolIY",iy);
+	  node->setParam(robotname_sl + "/toolIZ",iz);
 	  return true;
 	}
       else
