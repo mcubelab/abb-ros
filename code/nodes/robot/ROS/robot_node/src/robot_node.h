@@ -178,6 +178,10 @@ class RobotController
   double curGoalJ[NUM_JOINTS];
   double curTargJ[NUM_JOINTS];
 
+  // Error Handling
+  int errorId;
+  char errorReply[MAX_BUFFER];
+  
   // Move commands are public so that the non-blocking thread can use it
   bool setCartesianJ(double x, double y, double z, 
     double q0, double qx, double qy, double qz);

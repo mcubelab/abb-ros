@@ -133,8 +133,7 @@ bool RobotController::defaultRobotConfiguration()
 
   int zone;
   double speedTCP, speedORI;
-  int vacuumMode;
-
+ 
   //WorkObject
   node->getParam(robotname_sl + "/workobjectX",defWOx);
   node->getParam(robotname_sl + "/workobjectY",defWOy);
@@ -181,9 +180,9 @@ bool RobotController::defaultRobotConfiguration()
     return false;
 
   //Vacuum
-  node->getParam(robotname_sl + "/vacuum",vacuumMode);
-  if (!setVacuum(vacuumMode))
-    return false;
+  //node->getParam(robotname_sl + "/vacuum",vacuumMode);
+  //if (!setVacuum(vacuumMode))
+  //  return false;
 
   //Communication mode: default is blocking
   if (!setComm(BLOCKING))
@@ -503,7 +502,8 @@ bool RobotController::robot_SetCartesian(
     // If we are in blocking mode, simply execute the cartesian move
     if (!setCartesian(req.x, req.y, req.z, req.q0, req.qx, req.qy, req.qz))
     {
-      res.ret = 0;
+      //res.ret = 0;  
+      res.ret = errorId;
       res.msg = "ROBOT_CONTROLLER: Not able to set cartesian coordinates ";
       res.msg += "of the robot.";
       return false;
@@ -511,6 +511,7 @@ bool RobotController::robot_SetCartesian(
   }
 
   res.ret = 1;
+  res.ret = errorId;
   res.msg = "ROBOT_CONTROLLER: OK.";
   return true;
 }
@@ -606,7 +607,8 @@ bool RobotController::robot_SetJoints(
     // If we are in blocking mode, simply execute the entire joint move
     if (!setJoints(req.j1, req.j2, req.j3, req.j4, req.j5, req.j6))
     {
-      res.ret = 0;
+      //res.ret = 0;
+      res.ret = errorId;
       res.msg = "ROBOT_CONTROLLER: Not able to set cartesian coordinates ";
       res.msg += "of the robot.";
       return false;
@@ -1804,8 +1806,12 @@ bool RobotController::sendAndReceive(char *message, int messageLength,
     if ((t=recv(robotMotionSocket, reply, MAX_BUFFER-1, 0)) > 0)
     {
       reply[t] = '\0';
+      sprintf(errorReply, "%s",reply);
       int ok, rcvIdCode;
       sscanf(reply,"%*d %d %d", &rcvIdCode, &ok);
+      errorId = ok;
+      printf("Error Id %d\n",errorId);
+ 
       if(idCode!=-1)
       {  
         if ((ok == SERVER_OK) && (rcvIdCode == idCode))
@@ -1816,6 +1822,8 @@ bool RobotController::sendAndReceive(char *message, int messageLength,
         else if ((ok == SERVER_COLLISION) && (rcvIdCode == idCode))
         {
           ROS_WARN("ROBOT_CONTROLLER: Collision Detected.");
+          pthread_mutex_unlock(&sendRecvMutex);
+          return false;
         }
         else if ((ok == SERVER_BAD_IK || ok == SERVER_BAD_FK) && (rcvIdCode == idCode))
         {
@@ -1837,7 +1845,10 @@ bool RobotController::sendAndReceive(char *message, int messageLength,
         }
         else if (ok == SERVER_COLLISION)
         {
-          ROS_WARN("ROBOT_CONTROLLER: Collision Detected.");
+          ROS_WARN("ROBOT_CONTROLLER: Collision Detected.");      
+          pthread_mutex_unlock(&sendRecvMutex);
+          return false;
+  
         }
         else if ((ok == SERVER_BAD_IK || ok == SERVER_BAD_FK) && (rcvIdCode == idCode))
         {
