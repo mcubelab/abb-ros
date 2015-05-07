@@ -23,6 +23,7 @@ rosbuild_gensrv()
 
 ADD_CUSTOM_COMMAND(
   OUTPUT matlab_comm.h
+  COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/include/matlab_comm/
   COMMAND cp ${PROJECT_SOURCE_DIR}/src/matlab_comm.h
              ${PROJECT_SOURCE_DIR}/include/matlab_comm/matlab_comm.h
   DEPENDS ${PROJECT_SOURCE_DIR}/src/matlab_comm.h)
