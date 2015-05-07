@@ -493,7 +493,7 @@ bool RobotController::robot_SetCartesian(
       res.ret = 0;
       res.msg = "ROBOT_CONTROLLER: Can't do a cartesian move while doing a ";
       res.msg += "non-blocking joint move!";
-      return false;
+      return true;
     }
     pthread_mutex_unlock(&nonBlockMutex);
   }
@@ -506,7 +506,7 @@ bool RobotController::robot_SetCartesian(
       res.ret = errorId;
       res.msg = "ROBOT_CONTROLLER: Not able to set cartesian coordinates ";
       res.msg += "of the robot.";
-      return false;
+      return true;
     }
   }
 
@@ -598,7 +598,7 @@ bool RobotController::robot_SetJoints(
       res.ret = 0;
       res.msg = "ROBOT_CONTROLLER: Can't do a joint move while doing a ";
       res.msg += "non-blocking cartesian move!";
-      return false;
+      return true;
     }
     pthread_mutex_unlock(&nonBlockMutex);
   }
@@ -611,7 +611,7 @@ bool RobotController::robot_SetJoints(
       res.ret = errorId;
       res.msg = "ROBOT_CONTROLLER: Not able to set cartesian coordinates ";
       res.msg += "of the robot.";
-      return false;
+      return true;
     }
   }
 
@@ -1109,15 +1109,15 @@ bool RobotController::robot_ExecuteJointPosBuffer(
 {
 	if (executeJointPosBuffer())
 	{
-		res.ret = 1;
-		res.msg = "ROBOT_CONTROLLER: OK.";
+		res.ret = errorId;
+ 		res.msg = "ROBOT_CONTROLLER: OK.";
 		return true;
 	}
 	else
 	{
-		res.ret = 0;
-		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered joint trajectories ";
-		return false;
+		res.ret = errorId;
+ 		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered joint trajectories ";
+		return true;
 	}
 	
 }
@@ -1636,8 +1636,10 @@ bool RobotController::addJointPosBuffer(double j1, double j2, double j3, double 
 	char reply[MAX_BUFFER];
 	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
 	strcpy(message, ABBInterpreter::addJointPosBuffer(j1, j2, j3, j4, j5, j6, randNumber).c_str());
-	sendAndReceive(message,strlen(message), reply, randNumber);
-	return true;
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+	  return true;
+    else
+      return false;
 	
 	/* Template
 	// Command the robot to move to a given joint configuration
@@ -1678,8 +1680,10 @@ bool RobotController::executeJointPosBuffer()
 	char reply[MAX_BUFFER];
 	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
 	strcpy(message, ABBInterpreter::executeJointPosBuffer(randNumber).c_str());
-	sendAndReceive(message,strlen(message), reply, randNumber);
-	return true;
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      return true;
+    else
+      return false;
 }
 
 // Clear the joint position buffer
@@ -1689,8 +1693,10 @@ bool RobotController::clearJointPosBuffer()
 	char reply[MAX_BUFFER];
 	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
 	strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
-	sendAndReceive(message,strlen(message), reply, randNumber);
-	return true;
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      return true;
+    else
+      return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1810,7 +1816,7 @@ bool RobotController::sendAndReceive(char *message, int messageLength,
       int ok, rcvIdCode;
       sscanf(reply,"%*d %d %d", &rcvIdCode, &ok);
       errorId = ok;
-      printf("Error Id %d\n",errorId);
+      //printf("Error Id %d\n",errorId);
  
       if(idCode!=-1)
       {  
