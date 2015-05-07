@@ -32,6 +32,8 @@ void RobotComm::subscribe(ros::NodeHandle* np)
     np->serviceClient<robot_comm::robot_SetZone>(robotname + "_SetZone");
   handle_robot_SetTool = 
     np->serviceClient<robot_comm::robot_SetTool>(robotname + "_SetTool");
+  handle_robot_SetInertia = 
+    np->serviceClient<robot_comm::robot_SetInertia>(robotname + "_SetInertia");
   handle_robot_SetJoints = 
     np->serviceClient<robot_comm::robot_SetJoints>(robotname + "_SetJoints");
   handle_robot_GetJoints = 
@@ -90,6 +92,7 @@ void RobotComm::shutdown()
   handle_robot_SetWorkObject.shutdown();
   handle_robot_SetZone.shutdown();
   handle_robot_SetTool.shutdown();
+  handle_robot_SetInertia.shutdown();
   handle_robot_SetJoints.shutdown();
   handle_robot_GetJoints.shutdown();
   handle_robot_SetComm.shutdown();
@@ -236,6 +239,19 @@ bool RobotComm::SetTool(const double x, const double y, const double z,
 	return handle_robot_SetTool.call(robot_SetTool_srv);
 }
 
+bool RobotComm::SetInertia(const double m, const double cgx, const double cgy, 
+    const double cgz, const double ix, const double iy, const double iz)
+{
+  robot_SetInertia_srv.request.m = m;
+  robot_SetInertia_srv.request.cgx = cgx;
+  robot_SetInertia_srv.request.cgy = cgy;
+  robot_SetInertia_srv.request.cgz = cgz;
+  robot_SetInertia_srv.request.ix = ix;
+  robot_SetInertia_srv.request.iy = iy;
+  robot_SetInertia_srv.request.iz = iz;
+  return handle_robot_SetInertia.call(robot_SetInertia_srv);
+}
+
 bool RobotComm::SetComm(const int mode)
 {
   robot_SetComm_srv.request.mode = mode;
@@ -340,6 +356,19 @@ bool RobotComm::GetTool(double tool[7])
   return success; 
 }
 
+bool RobotComm::GetInertia(double inertia[7])
+{
+  bool success = handle_robot_GetState.call(robot_GetState_srv);
+  inertia[0] = robot_GetState_srv.response.toolm;
+  inertia[1] = robot_GetState_srv.response.toolcgx;
+  inertia[2] = robot_GetState_srv.response.toolcgy;
+  inertia[3] = robot_GetState_srv.response.toolcgz;
+  inertia[4] = robot_GetState_srv.response.toolix;
+  inertia[5] = robot_GetState_srv.response.tooliy;
+  inertia[6] = robot_GetState_srv.response.tooliz;
+  return success; 
+}
+
 
 bool RobotComm::GetZone(int &zone)
 {
@@ -348,17 +377,17 @@ bool RobotComm::GetZone(int &zone)
   return success;
 }
 
-bool RobotComm::GetState(double &tcp, double &ori, int &zone, HomogTransf &workObject, HomogTransf &tool)
+bool RobotComm::GetState(double &tcp, double &ori, int &zone, HomogTransf &workObject, HomogTransf &tool, double inertia[7])
 {
-  double wo[7], t[7];
-  bool success = GetState(tcp, ori, zone, wo, t);
+  double wo[7], t[7], i[7];
+  bool success = GetState(tcp, ori, zone, wo, t, i);
   workObject = HomogTransf(wo);
   tool = HomogTransf(t);
   return success;
 }
 
 
-bool RobotComm::GetState(double &tcp, double &ori, int &zone, double workObject[7], double tool[7])
+bool RobotComm::GetState(double &tcp, double &ori, int &zone, double workObject[7], double tool[7], double inertia[7])
 {
   bool success = handle_robot_GetState.call(robot_GetState_srv);
   tcp = robot_GetState_srv.response.tcp;
@@ -378,6 +407,13 @@ bool RobotComm::GetState(double &tcp, double &ori, int &zone, double workObject[
   tool[4] = robot_GetState_srv.response.toolqx;
   tool[5] = robot_GetState_srv.response.toolqy;
   tool[6] = robot_GetState_srv.response.toolqz;
+  inertia[0] = robot_GetState_srv.response.toolm;
+  inertia[1] = robot_GetState_srv.response.toolcgx;
+  inertia[2] = robot_GetState_srv.response.toolcgy;
+  inertia[3] = robot_GetState_srv.response.toolcgz;
+  inertia[4] = robot_GetState_srv.response.toolix;
+  inertia[5] = robot_GetState_srv.response.tooliy;
+  inertia[6] = robot_GetState_srv.response.tooliz;
   return success; 
 }
 

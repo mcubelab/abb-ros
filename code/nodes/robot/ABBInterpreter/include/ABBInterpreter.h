@@ -24,6 +24,7 @@ namespace ABBInterpreter
   string getCartesian(int idCode=0);
   string getJoints(int idCode=0);
   string setTool(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
+  string setInertia(double m, double cgx, double cgy, double cgz, double ix, double iy, double iz, int idCode=0);
   string setWorkObject(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
   string setSpeed(double tcp, double ori, int idCode=0);
   //string setZone(int mode=1,int idCode=0);
