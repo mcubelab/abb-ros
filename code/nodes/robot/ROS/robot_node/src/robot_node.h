@@ -132,7 +132,7 @@ class RobotController
   bool robot_Approach(
       robot_comm::robot_Approach::Request& req,
       robot_comm::robot_Approach::Response& res);
-  // Buffer Comm declerations:
+  // Buffer (joints) Comm declerations:
   bool robot_AddJointPosBuffer(
 	  robot_comm::robot_AddJointPosBuffer::Request& req,
 	  robot_comm::robot_AddJointPosBuffer::Response& res);
@@ -142,6 +142,16 @@ class RobotController
   bool robot_ClearJointPosBuffer(
 	  robot_comm::robot_ClearJointPosBuffer::Request& req,
 	  robot_comm::robot_ClearJointPosBuffer::Response& res);
+    // Buffer (TCP)
+  bool robot_AddBuffer(
+	  robot_comm::robot_AddBuffer::Request& req,
+	  robot_comm::robot_AddBuffer::Response& res);
+  bool robot_ExecuteBuffer(
+	  robot_comm::robot_ExecuteBuffer::Request& req,
+	  robot_comm::robot_ExecuteBuffer::Response& res);
+  bool robot_ClearBuffer(
+	  robot_comm::robot_ClearBuffer::Request& req,
+	  robot_comm::robot_ClearBuffer::Response& res);
 	  
 
   // Advertise Services and Topics
@@ -194,6 +204,11 @@ class RobotController
   bool addJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6);
   bool executeJointPosBuffer();
   bool clearJointPosBuffer();
+  
+  // Buffer Commands for joint positions
+  bool addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz);
+  bool executeBuffer();
+  bool clearBuffer();
 
   // Functions that compute our distance from the current position to the goal
   double posDistFromGoal();
@@ -245,6 +260,9 @@ class RobotController
   ros::ServiceServer handle_robot_AddJointPosBuffer;
   ros::ServiceServer handle_robot_ExecuteJointPosBuffer;
   ros::ServiceServer handle_robot_ClearJointPosBuffer;
+  ros::ServiceServer handle_robot_AddBuffer;
+  ros::ServiceServer handle_robot_ExecuteBuffer;
+  ros::ServiceServer handle_robot_ClearBuffer;
  
   // Helper function for communicating with robot server
   bool sendAndReceive(char *message, int messageLength, 

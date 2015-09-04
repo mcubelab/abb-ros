@@ -51,7 +51,7 @@ int main(int argc, char** argv)
   HomogTransf pose;
   Vec trans(3);
   //Vec transC = Vec("600 300 200",3); // Safe location in the center of the robot workspace.
-  Vec transC = Vec("1299.32 250.78 250",3); // Safe location in the center of the robot workspace. mcube
+  Vec transC = Vec("350 0 250",3); // Safe location in the center of the robot workspace. mcube
   Quaternion quat;
   Quaternion quatC = Quaternion("0.0 0.7071 0.7071 0.0"); // Hand facing down
   

@@ -264,6 +264,13 @@ void RobotController::advertiseServices()
       &RobotController::robot_ExecuteJointPosBuffer, this);
   handle_robot_ClearJointPosBuffer = node->advertiseService(robotname+"_ClearJointPosBuffer", 
       &RobotController::robot_ClearJointPosBuffer, this);
+      
+  handle_robot_AddBuffer = node->advertiseService(robotname+"_AddBuffer", 
+      &RobotController::robot_AddBuffer, this);
+  handle_robot_ExecuteBuffer = node->advertiseService(robotname+"_ExecuteBuffer", 
+      &RobotController::robot_ExecuteBuffer, this);
+  handle_robot_ClearBuffer = node->advertiseService(robotname+"_ClearBuffer", 
+      &RobotController::robot_ClearBuffer, this);
 }
 
 
@@ -1082,7 +1089,66 @@ bool RobotController::setNonBlockSpeed(double tcp, double ori)
   return true;
 }
 
+// TCP Pose buffer commands
+bool RobotController::robot_AddBuffer(
+    robot_comm::robot_AddBuffer::Request& req, 
+    robot_comm::robot_AddBuffer::Response& res)
+{
+	if (addBuffer(req.x, req.y, req.z, req.q0, req.qx, req.qy, req.qz))
+	{
+		res.ret = 1;
+		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = 0;
+		res.msg = "ROBOT_CONTROLLER: Not able to add TCP pose to buffer ";
+		res.msg += "the robot.";
+		return false;
+	}
+	
+}
 
+bool RobotController::robot_ExecuteBuffer(
+    robot_comm::robot_ExecuteBuffer::Request& req, 
+    robot_comm::robot_ExecuteBuffer::Response& res)
+{
+	if (executeBuffer())
+	{
+		res.ret = errorId;
+ 		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = errorId;
+ 		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered TCP pose trajectory ";
+		return true;
+	}
+	
+}
+
+bool RobotController::robot_ClearBuffer(
+    robot_comm::robot_ClearBuffer::Request& req, 
+    robot_comm::robot_ClearBuffer::Response& res)
+{
+	if (clearBuffer())
+	{
+		res.ret = 1;
+		res.msg = "ROBOT_CONTROLLER: OK.";
+		return true;
+	}
+	else
+	{
+		res.ret = 0;
+		res.msg = "ROBOT_CONTROLLER: Not able to clear buffered TCP pose trajectories ";
+		return false;
+	}
+	
+}
+
+// Joint position buffer commands
 bool RobotController::robot_AddJointPosBuffer(
     robot_comm::robot_AddJointPosBuffer::Request& req, 
     robot_comm::robot_AddJointPosBuffer::Response& res)
@@ -1628,6 +1694,44 @@ bool RobotController::is_moving()
     return false;
 }
 
+// Send TCP pose trajectories to a buffer 1 at a time
+bool RobotController::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz)
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::addBuffer(x, y, z, q0, qx, qy, qz, randNumber).c_str());
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+	  return true;
+    else
+      return false;
+}
+
+// Execute the TCP poses added to the buffer previously
+bool RobotController::executeBuffer()
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::executeBuffer(randNumber).c_str());
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      return true;
+    else
+      return false;
+}
+
+// Clear the TCP pose buffer
+bool RobotController::clearBuffer()
+{
+	char message[MAX_BUFFER];
+	char reply[MAX_BUFFER];
+	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+	strcpy(message, ABBInterpreter::clearBuffer(randNumber).c_str());
+	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      return true;
+    else
+      return false;
+}
 
 // Set adds joint positions 1 configuration at a time to the joint position buffer
 bool RobotController::addJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6)
@@ -1967,6 +2071,7 @@ void RobotController::logCallback(const ros::TimerEvent&)
               // If we read in the correct number of parameters, save this message
               msgCartesian.date.assign(date);
               msgCartesian.time.assign(time);
+              msgCartesian.timeStamp = ros::Time::now().toSec();
               cartesianModif = true;
             }
             break;

@@ -33,6 +33,12 @@ namespace ABBInterpreter
   string setVacuum(int vacuum=0, int idCode=0);
   string closeConnection(int idCode=0);
   // Buffers
+  // TCP Pose
+  string addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode);
+  string clearBuffer(int idCode);
+  string executeBuffer(int idCode);
+  string lenBuffer(int idCode);
+  // Joint Configuration
   string addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode);
   string clearJointPosBuffer(int idCode);
   string executeJointPosBuffer(int idCode);

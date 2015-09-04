@@ -416,31 +416,6 @@ string ABBInterpreter::setZone(bool fine, double tcp_mm, double ori_mm, double o
   return (msg);
 }
 
-/*
-string ABBInterpreter::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode)
-{
-	//appends single target to the buffer
-	// move will execute at current speed (which you can change between addBuffer calls)
-	
-	char buff[20];
-	string msg("30 ");//instruction code;
-	sprintf(buff,"%.3d ",idCode); //identification code
-	msg += buff;
-	
-	sprintf(buff,"%+08.1lf ",x);  msg += buff;
-	sprintf(buff,"%+08.1lf ",y);  msg += buff;
-    sprintf(buff,"%+08.1lf ",z);  msg += buff;
-	sprintf(buff,"%+08.5lf ",q0); msg += buff;
-	sprintf(buff,"%+08.5lf ",qx); msg += buff;
-	sprintf(buff,"%+08.5lf ",qy); msg += buff;
-	sprintf(buff,"%+08.5lf ",qz); msg += buff;
-	
-	msg += "#";
-	
-	return (msg);
-}
-*/
-
 /* Here lies the setBuffer code for position of end effector - Dont need it for joint control
 string ABBInterpreter::setBuffer(PosList poslist) //Need help on this one, dont really understand it
 {
@@ -461,34 +436,65 @@ string ABBInterpreter::setBuffer(PosList poslist) //Need help on this one, dont 
 }
 */
 
-/*	
-string ABBInterpreter::clearBuffer()
+string ABBInterpreter::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode)
 {
-	string msg("31 ");
-	msg += "#";
-	return (msg);
-	
+  //appends single target to the buffer
+  // move will execute at current speed (which you can change between addBuffer calls)
+  
+  char buff[20];
+  string msg("30 ");//instruction code;
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  
+  sprintf(buff,"%+08.1lf ",x);  msg += buff;
+  sprintf(buff,"%+08.1lf ",y);  msg += buff;
+  sprintf(buff,"%+08.1lf ",z);  msg += buff;
+  sprintf(buff,"%+08.5lf ",q0); msg += buff;
+  sprintf(buff,"%+08.5lf ",qx); msg += buff;
+  sprintf(buff,"%+08.5lf ",qy); msg += buff;
+  sprintf(buff,"%+08.5lf ",qz); msg += buff;
+  
+  msg += "#";
+  
+  return (msg);
 }
-*/
-/*
-string ABBInterpreter::lenBuffer()
-{
-	string msg("32 ");
-	msg += "#";
-	return (msg);
-		
-}
-*/
 
-/*
-string ABBInterpreter::executeBuffer()
+
+string ABBInterpreter::clearBuffer(int idCode)
 {
-	string msg("33 ");
-	msg += "#";
-	return (msg);
+  char buff[20];
+  string msg("31 ");
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  msg += "#";
+  return (msg);
 
 }
-*/
+
+
+
+string ABBInterpreter::lenBuffer(int idCode)
+{
+  char buff[20];
+  string msg("32 ");
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  msg += "#";
+  return (msg);		
+}
+
+
+
+string ABBInterpreter::executeBuffer(int idCode)
+{
+  char buff[20];
+  string msg("33 ");
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  msg += "#";
+  return (msg);
+}
+
 
 string ABBInterpreter::addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode)
 {
