@@ -353,6 +353,31 @@ string ABBInterpreter::setSpeed(double tcp, double ori, int idCode)
   return (msg);
 }
 
+
+/**
+  * Formats message to set the TCP acceleration of the ABB robot.
+  * @param acc Linear acceleration of the TCP in mm/s^2 (0.1-28 m/s^2).
+  * @param deacc Linear deacceleration of the TCP in mm/s^2 (0.1-28 m/s^2).
+  * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
+  * @return String to be sent to ABB server.
+  */
+string ABBInterpreter::setAcc(double acc, double deacc, int idCode)
+{
+  char buff[20];
+  string msg("15 ");//instruction code;
+  
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  sprintf(buff,"%08.2lf ",acc);
+  msg += buff ;
+  sprintf(buff,"%08.2lf ",deacc);
+  msg += buff ;
+  msg += "#";
+
+  return (msg);
+}
+
+
 /*
   * Deprecated: Formats message to set the zone mode of the ABB robot (distance from where to interpolate to the next destination).
     Possible modes:

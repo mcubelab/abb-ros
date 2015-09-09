@@ -120,6 +120,9 @@ class RobotController
   bool robot_SetSpeed(
       robot_comm::robot_SetSpeed::Request& req, 
       robot_comm::robot_SetSpeed::Response& res);
+  bool robot_SetAcc(
+      robot_comm::robot_SetAcc::Request& req, 
+      robot_comm::robot_SetAcc::Response& res);
   bool robot_SetZone(
       robot_comm::robot_SetZone::Request& req, 
       robot_comm::robot_SetZone::Response& res);
@@ -248,6 +251,7 @@ class RobotController
   ros::ServiceServer handle_robot_SetInertia;
   ros::ServiceServer handle_robot_SetWorkObject;
   ros::ServiceServer handle_robot_SetSpeed;
+  ros::ServiceServer handle_robot_SetAcc;
   ros::ServiceServer handle_robot_GetState;
   ros::ServiceServer handle_robot_SetZone;
   ros::ServiceServer handle_robot_SetTrackDist;
@@ -283,6 +287,7 @@ class RobotController
   bool specialCommand(int command, double param1=0, double param2=0, double param3=0, double param4=0, double param5=0);
   bool setVacuum(int v);
   bool setSpeed(double tcp, double ori);
+  bool setAcc(double acc, double deacc);
   bool setZone(int z);
   bool stop_nb();
   bool setComm(int mode);

@@ -42,6 +42,8 @@ void RobotComm::subscribe(ros::NodeHandle* np)
     np->serviceClient<robot_comm::robot_SetComm>(robotname + "_SetComm");
   handle_robot_SetSpeed = 
     np->serviceClient<robot_comm::robot_SetSpeed>(robotname + "_SetSpeed");
+  handle_robot_SetAcc = 
+    np->serviceClient<robot_comm::robot_SetAcc>(robotname + "_SetAcc");
   handle_robot_GetState = 
     np->serviceClient<robot_comm::robot_GetState>(robotname + "_GetState");
   handle_robot_SetTrackDist = 
@@ -97,6 +99,7 @@ void RobotComm::shutdown()
   handle_robot_GetJoints.shutdown();
   handle_robot_SetComm.shutdown();
   handle_robot_SetSpeed.shutdown();
+  handle_robot_SetAcc.shutdown();
   handle_robot_GetState.shutdown();
   handle_robot_SetTrackDist.shutdown();
   handle_robot_SpecialCommand.shutdown();
@@ -265,7 +268,12 @@ bool RobotComm::SetSpeed(const double tcp, const double ori)
   return handle_robot_SetSpeed.call(robot_SetSpeed_srv);  
 }
 
-
+bool RobotComm::SetAcc(const double acc, const double deacc)
+{
+  robot_SetAcc_srv.request.acc = acc;
+  robot_SetAcc_srv.request.deacc = deacc;
+  return handle_robot_SetSpeed.call(robot_SetAcc_srv);  
+}
 
 bool RobotComm::SetTrackDist(const double pos_dist, const double ang_dist)
 {
