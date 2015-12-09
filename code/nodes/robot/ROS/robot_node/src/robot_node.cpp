@@ -1833,11 +1833,11 @@ bool RobotController::executeJointPosBuffer()
 // Clear the joint position buffer
 bool RobotController::clearJointPosBuffer()
 {
-      char message[MAX_BUFFER];
-      char reply[MAX_BUFFER];
-      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-      strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
-      if(sendAndReceive(message,strlen(message), reply, randNumber))
+    char message[MAX_BUFFER];
+    char reply[MAX_BUFFER];
+    int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+    strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
+    if(sendAndReceive(message,strlen(message), reply, randNumber))
       return true;
     else
       return false;
@@ -1846,6 +1846,32 @@ bool RobotController::clearJointPosBuffer()
 //////////////////////////////////////////////////////////////////////////////
 // Connect to Servers on Robot
 //////////////////////////////////////////////////////////////////////////////
+
+
+// Establish RRI connection
+bool RobotController::establishRRI(int port){
+  if(RRIConnected)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: RRI already connected.");
+    return false;
+  }
+  
+  try {
+    // Create an RRI UDP socket
+    RRIsock = new UDPSocket(port);
+    char message[MAX_BUFFER];
+    char reply[MAX_BUFFER];
+    int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+    strcpy(message, ABBInterpreter::connectRRI(randNumber).c_str());
+    if(sendAndReceive(message,strlen(message), reply, randNumber))
+      return true;
+    else
+      return false;
+  } catch (SocketException &e) {
+    ROS_INFO("ROBOT_CONTROLLER: %s", e.what());
+    return false;
+  }
+}
 
 // Connect to the logger server
 bool RobotController::connectLoggerServer(const char* ip, int port)
@@ -2234,6 +2260,66 @@ void RobotController::logCallback(const ros::TimerEvent&)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// RRI Call Back
+//
+// This function receives robot position data to see if any new position
+// or force information has been transmitted by udp. If any data has been
+// sent, it reads all of it, saves the newest of each message, and publishes
+// any new position, joint, or force information it gets. This function is
+// called every time there is a timer event.
+//////////////////////////////////////////////////////////////////////////////
+void RobotController::rriCallback(const ros::TimerEvent&)
+{
+  char buffer[MAX_BUFFER];
+  int recvMsgSize;
+  string sourceAddress;             // Address of datagram source
+  unsigned short sourcePort;        // Port of datagram source
+  
+  // Read all information from the tcp/ip socket
+  if ((recvMsgSize = sock.recvFrom(buffer, MAX_BUFFER-1, sourceAddress, sourcePort)) > 0)
+  {
+    buffer[recvMsgSize] = '\0';
+    
+    TiXmlDocument doc;
+    doc.Parse( buffer );
+    if (element){
+      // For TCP position 
+      TiXmlElement* Pact = element->FirstChildElement("P_act");
+      double P_act[6];  // X, Y, Z, Rx, Ry, Rz
+      string P_element_names[] = {"X", "Y", "Z", "Rx", "Ry", "Rz"};
+      for (int i=0;i<6;i++)
+        Pact->QueryDoubleAttribute( P_element_names[i].c_str(), &P_act[i]);
+      
+      // publish it
+      for (int i=0;i<6;i++)
+        js.position.push_back(P_act[i]*0.001);  // mm to m
+        js.name.push_back(P_element_names[i]);
+        
+      // For joints position
+      TiXmlElement* Jact = element->FirstChildElement("J_act");
+      double J_act[6];  // J1, J2, J3, J4, J5, J6
+      string J_element_names[] = {"J1", "J2", "J3", "J4", "J5", "J6"};
+      for (int i=0;i<6;i++)
+        Jact->QueryDoubleAttribute( J_element_names[i].c_str(), &J_act[i]);
+        
+      // publish it
+      sensor_msgs::JointState js;
+      for (int i=0;i<6;i++)
+        js.position.push_back(J_act[i]*DEG2RAD);
+        
+      js.name.push_back("joint1");
+      js.name.push_back("joint2");
+      js.name.push_back("joint3");
+      js.name.push_back("joint4");
+      js.name.push_back("joint5");
+      js.name.push_back("joint6");
+      js.header.stamp = ros::Time::now();
+      handle_robot_RRIJointState.publish(js);
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Main Thread for Logger
 //
 // This is the main function for our logger thread. We simply start a ROS 
@@ -2250,6 +2336,31 @@ void *loggerMain(void *args)
   ros::Timer loggerTimer;
   loggerTimer = ABBrobot->node->createTimer(ros::Duration(0.003), 
       &RobotController::logCallback, ABBrobot);
+z
+  // Now simply wait until the program is shut down
+  ros::waitForShutdown();
+  loggerTimer.stop();
+
+  pthread_exit((void*) 0);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Main Thread for RRI
+//
+// This is the main function for our logger thread. We simply start a ROS 
+// timer event and get it to call our loggerCallback function at a 
+// specified interval. This exits when ROS shuts down.
+//////////////////////////////////////////////////////////////////////////////
+void *rriMain(void *args)
+{
+  //Recover the pointer to the main node
+  RobotController* ABBrobot;
+  ABBrobot = (RobotController*) args;
+
+  // Create a timer to look at the log data
+  ros::Timer rriTimer;
+  rriTimer = ABBrobot->node->createTimer(ros::Duration(0.003), 
+      &RobotController::rriCallback, ABBrobot);
 
   // Now simply wait until the program is shut down
   ros::waitForShutdown();
@@ -2257,6 +2368,7 @@ void *loggerMain(void *args)
 
   pthread_exit((void*) 0);
 }
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Main Thread for Non-Blocking
@@ -2575,6 +2687,19 @@ int main(int argc, char** argv)
         loggerMain, (void*)&ABBrobot) != 0)
   {
     ROS_INFO("ROBOT_CONTROLLER: Unable to create logger thread. "
+        "Error number: %d.",errno);
+  }
+  
+  // Create a dedicated thread for rri broadcasts
+  pthread_t rriThread;
+  pthread_attr_t attrR;
+  pthread_attr_init(&attrR);
+  pthread_attr_setdetachstate(&attrR, PTHREAD_CREATE_JOINABLE);
+
+  if (pthread_create(&rriThread, &attrR, 
+        rriMain, (void*)&ABBrobot) != 0)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: Unable to create rri thread. "
         "Error number: %d.",errno);
   }
 

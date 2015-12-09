@@ -13,6 +13,9 @@
 
 #include "ABBInterpreter.h"
 
+#include "PracticalSocket/PracticalSocket.h" // For UDPSocket and SocketException
+#include "tinyxml.h"
+
 //ROS specific
 #include <ros/ros.h>
 #include <robot_comm/robot_comm.h>
@@ -164,6 +167,9 @@ class RobotController
   // Call back function for the logging which will be called by a timer event
   void logCallback(const ros::TimerEvent&);
   
+  // Call back function for the RRI which will be called by a timer event
+  void rriCallback(const ros::TimerEvent&);
+  
   // Public access to the ROS node
   ros::NodeHandle *node;
 
@@ -222,12 +228,15 @@ class RobotController
   // Socket Variables
   bool motionConnected;
   bool loggerConnected;
+  bool RRIConnected;
   int robotMotionSocket;
   int robotLoggerSocket;
+  UDPSocket* RRIsock;
 
   // Connect to servers on the robot
   bool connectMotionServer(const char* ip, int port);
   bool connectLoggerServer(const char* ip, int port);
+  bool establishRRI(int port);
   
   // Sets up the default robot configuration
   bool defaultRobotConfiguration();

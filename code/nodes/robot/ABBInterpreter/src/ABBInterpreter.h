@@ -43,6 +43,8 @@ namespace ABBInterpreter
   string addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode);
   string clearJointPosBuffer(int idCode);
   string executeJointPosBuffer(int idCode);
+  string connectRRI(int idCode);
+  string closeRRI(int idCode);
   
   
   int parseCartesian(string msg, double *x, double *y, double *z,
