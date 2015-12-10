@@ -20,6 +20,7 @@
 #include "PracticalSocket.h"
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 #ifdef WIN32
   #include <winsock.h>         // For socket(), connect(), send(), and recv()
@@ -97,6 +98,10 @@ Socket::Socket(int type, int protocol) throw(SocketException) {
   if ((sockDesc = socket(PF_INET, type, protocol)) < 0) {
     throw SocketException("Socket creation failed (socket())", true);
   }
+  // hack
+  int flags;
+  flags = fcntl(sockDesc,F_GETFL,0);
+  fcntl(sockDesc, F_SETFL, flags | O_NONBLOCK);   
 }
 
 Socket::Socket(int sockDesc) {

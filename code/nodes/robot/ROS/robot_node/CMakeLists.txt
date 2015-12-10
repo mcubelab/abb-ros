@@ -29,7 +29,14 @@ ADD_CUSTOM_TARGET(makeABBLIB ALL DEPENDS libABBInterpreter.a)
 #target_link_libraries(example ${PROJECT_NAME})
 
 include_directories(${ABB_PATH}/include)
+#include_directories(src/PracticalSocket)
+#include_directories(src/tinyxml)
 link_directories(${ABB_PATH}/lib)
 
-rosbuild_add_executable(robot_node src/robot_node.cpp)
+rosbuild_add_executable(robot_node src/robot_node.cpp 
+                        src/PracticalSocket/PracticalSocket.cpp
+                        src/tinyxml/tinystr.cpp
+                        src/tinyxml/tinyxml.cpp
+                        src/tinyxml/tinyxmlerror.cpp
+                        src/tinyxml/tinyxmlparser.cpp)
 target_link_libraries(robot_node -lABBInterpreter)

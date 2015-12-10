@@ -48,11 +48,19 @@ RobotController::~RobotController() {
   handle_robot_CartesianLog.shutdown();
   handle_robot_JointsLog.shutdown();
   handle_robot_ForceLog.shutdown();
+  handle_robot_RRIJointState.shutdown();
+  handle_robot_RRICartState.shutdown();
+  
+  char message[MAX_BUFFER];
+  
+  //Close RRI connections
+  strcpy(message, ABBInterpreter::closeRRI().c_str());
+  send(robotMotionSocket, message, strlen(message), 0);
 
   //Close connections
-  char message[MAX_BUFFER];
   strcpy(message, ABBInterpreter::closeConnection().c_str());
   send(robotMotionSocket, message, strlen(message), 0);
+  
   ros::Duration(1.0).sleep();
   close(robotMotionSocket);
   close(robotLoggerSocket);
@@ -66,6 +74,7 @@ bool RobotController::init(std::string id)
   std::string robotIp;
   int robotMotionPort;
   int robotLoggerPort;
+  int hostRRIPort;
 
   motionConnected = false;
   loggerConnected = false;
@@ -77,6 +86,7 @@ bool RobotController::init(std::string id)
   
   node->getParam(robotname_sl + "/robotIp",robotIp);
   node->getParam(robotname_sl + "/robotMotionPort",robotMotionPort);
+  
   connectMotionServer(robotIp.c_str(), robotMotionPort);
   if(!motionConnected)
   {
@@ -93,6 +103,8 @@ bool RobotController::init(std::string id)
         "Continuing without robot feedback.");
   }
 
+
+  
   // Setup our non-blocking variables
   non_blocking = false;
   do_nb_move = false;
@@ -119,6 +131,16 @@ bool RobotController::init(std::string id)
     return false;
   }
 
+  //Establish RRI connection
+  node->getParam(robotname_sl + "/hostRRIPort",hostRRIPort);
+  ROS_INFO("ROBOT_CONTROLLER: Establishing RRI connection on port %d...", hostRRIPort);
+  establishRRI(hostRRIPort);
+  if(!RRIConnected)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: Not able to establish RRI. "
+        "Continuing without RRI.");
+  }
+  
   return true;
 }
 
@@ -209,6 +231,10 @@ void RobotController::advertiseTopics()
     node->advertise<robot_comm::robot_JointsLog>(robotname + "_JointsLog", 100);
   handle_robot_ForceLog = 
     node->advertise<robot_comm::robot_ForceLog>(robotname + "_ForceLog", 100);
+  handle_robot_RRIJointState = 
+    node->advertise<sensor_msgs::JointState>(robotname + "_RRIJointState", 100);
+  handle_robot_RRICartState = 
+    node->advertise<sensor_msgs::JointState>(robotname + "_RRICartState", 100);
 }
 
 // Advertise the services that the robot will be listening for
@@ -1859,12 +1885,15 @@ bool RobotController::establishRRI(int port){
   try {
     // Create an RRI UDP socket
     RRIsock = new UDPSocket(port);
+    
     char message[MAX_BUFFER];
     char reply[MAX_BUFFER];
     int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
     strcpy(message, ABBInterpreter::connectRRI(randNumber).c_str());
-    if(sendAndReceive(message,strlen(message), reply, randNumber))
+    if(sendAndReceive(message,strlen(message), reply, randNumber)){
+      RRIConnected = true;
       return true;
+    }
     else
       return false;
   } catch (SocketException &e) {
@@ -2268,6 +2297,8 @@ void RobotController::logCallback(const ros::TimerEvent&)
 // any new position, joint, or force information it gets. This function is
 // called every time there is a timer event.
 //////////////////////////////////////////////////////////////////////////////
+
+
 void RobotController::rriCallback(const ros::TimerEvent&)
 {
   char buffer[MAX_BUFFER];
@@ -2276,46 +2307,62 @@ void RobotController::rriCallback(const ros::TimerEvent&)
   unsigned short sourcePort;        // Port of datagram source
   
   // Read all information from the tcp/ip socket
-  if ((recvMsgSize = sock.recvFrom(buffer, MAX_BUFFER-1, sourceAddress, sourcePort)) > 0)
-  {
-    buffer[recvMsgSize] = '\0';
-    
-    TiXmlDocument doc;
-    doc.Parse( buffer );
-    if (element){
-      // For TCP position 
-      TiXmlElement* Pact = element->FirstChildElement("P_act");
-      double P_act[6];  // X, Y, Z, Rx, Ry, Rz
-      string P_element_names[] = {"X", "Y", "Z", "Rx", "Ry", "Rz"};
-      for (int i=0;i<6;i++)
-        Pact->QueryDoubleAttribute( P_element_names[i].c_str(), &P_act[i]);
-      
-      // publish it
-      for (int i=0;i<6;i++)
-        js.position.push_back(P_act[i]*0.001);  // mm to m
-        js.name.push_back(P_element_names[i]);
-        
-      // For joints position
-      TiXmlElement* Jact = element->FirstChildElement("J_act");
-      double J_act[6];  // J1, J2, J3, J4, J5, J6
-      string J_element_names[] = {"J1", "J2", "J3", "J4", "J5", "J6"};
-      for (int i=0;i<6;i++)
-        Jact->QueryDoubleAttribute( J_element_names[i].c_str(), &J_act[i]);
-        
-      // publish it
+  
+  try{
+    if ((recvMsgSize = RRIsock->recvFrom(buffer, MAX_BUFFER-1, sourceAddress, sourcePort)) > 0)
+    {
+      // Prepare the msgs
+      sensor_msgs::JointState pos;
+      pos.header.stamp = ros::Time::now();
       sensor_msgs::JointState js;
-      for (int i=0;i<6;i++)
-        js.position.push_back(J_act[i]*DEG2RAD);
+      js.header.stamp = pos.header.stamp;
+      
+      // Parse it
+      buffer[recvMsgSize] = '\0';
+      xmldoc.Clear();
+      xmldoc.Parse( buffer );
+      TiXmlElement* element = xmldoc.FirstChildElement( "RobData" ); 
+      if (element){
         
-      js.name.push_back("joint1");
-      js.name.push_back("joint2");
-      js.name.push_back("joint3");
-      js.name.push_back("joint4");
-      js.name.push_back("joint5");
-      js.name.push_back("joint6");
-      js.header.stamp = ros::Time::now();
-      handle_robot_RRIJointState.publish(js);
+        // For TCP position 
+        TiXmlElement* Pact = element->FirstChildElement("P_act");
+        double P_act[6];  // X, Y, Z, Rx, Ry, Rz
+        string P_element_names[] = {"X", "Y", "Z", "Rx", "Ry", "Rz"};
+        
+        for (int i=0;i<6;i++)
+          Pact->QueryDoubleAttribute( P_element_names[i].c_str(), &P_act[i]);
+        
+        // publish it
+        for (int i=0;i<6;i++){
+          if (i<3)  pos.position.push_back(P_act[i]);
+          else      pos.position.push_back(P_act[i]);
+          pos.name.push_back(P_element_names[i]);
+        }
+        handle_robot_RRICartState.publish(pos);
+          
+        // For joints position
+        TiXmlElement* Jact = element->FirstChildElement("J_act");
+        double J_act[6];  // J1, J2, J3, J4, J5, J6
+        string J_element_names[] = {"J1", "J2", "J3", "J4", "J5", "J6"};
+        for (int i=0;i<6;i++)
+          Jact->QueryDoubleAttribute( J_element_names[i].c_str(), &J_act[i]);
+          
+        // publish it
+        for (int i=0;i<6;i++)
+          js.position.push_back(J_act[i]);
+          
+        js.name.push_back("joint1");
+        js.name.push_back("joint2");
+        js.name.push_back("joint3");
+        js.name.push_back("joint4");
+        js.name.push_back("joint5");
+        js.name.push_back("joint6");
+        handle_robot_RRIJointState.publish(js);
+      }
     }
+  } catch (SocketException &e) {
+    // no data
+    //cerr << e.what() << endl;
   }
 }
 
@@ -2336,7 +2383,6 @@ void *loggerMain(void *args)
   ros::Timer loggerTimer;
   loggerTimer = ABBrobot->node->createTimer(ros::Duration(0.003), 
       &RobotController::logCallback, ABBrobot);
-z
   // Now simply wait until the program is shut down
   ros::waitForShutdown();
   loggerTimer.stop();
@@ -2359,12 +2405,12 @@ void *rriMain(void *args)
 
   // Create a timer to look at the log data
   ros::Timer rriTimer;
-  rriTimer = ABBrobot->node->createTimer(ros::Duration(0.003), 
+  rriTimer = ABBrobot->node->createTimer(ros::Duration(0.001), 
       &RobotController::rriCallback, ABBrobot);
 
   // Now simply wait until the program is shut down
   ros::waitForShutdown();
-  loggerTimer.stop();
+  rriTimer.stop();
 
   pthread_exit((void*) 0);
 }
@@ -2728,7 +2774,7 @@ int main(int argc, char** argv)
   ROS_INFO("ROBOT_CONTROLLER: Running node /robot_controller...");
   // Multithreaded spinner so that callbacks 
   // can be handled on separate threads.
-  ros::MultiThreadedSpinner spinner(3); // We have 3 total threads
+  ros::MultiThreadedSpinner spinner(4); // We have 4 total threads
   spinner.spin();
   ROS_INFO("ROBOT_CONTROLLER: Shutting down node /robot_controller...");
 

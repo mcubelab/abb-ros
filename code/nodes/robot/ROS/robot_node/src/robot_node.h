@@ -247,6 +247,8 @@ class RobotController
   ros::Publisher handle_robot_CartesianLog;
   ros::Publisher handle_robot_JointsLog;
   ros::Publisher handle_robot_ForceLog;
+  ros::Publisher handle_robot_RRICartState;
+  ros::Publisher handle_robot_RRIJointState;
   ros::ServiceServer handle_robot_Ping;
   ros::ServiceServer handle_robot_SetCartesian;
   ros::ServiceServer handle_robot_SetCartesianJ;
@@ -325,4 +327,7 @@ class RobotController
   Quaternion curQ;
   double curJ[NUM_JOINTS];
   double curForce[NUM_FORCES];
+  
+  // XML parser for rri
+  TiXmlDocument xmldoc;  
 };
