@@ -3,10 +3,16 @@ abb-ros
 
 ABB ROS node forked from MLab
 
+Make it
+------
+```
+rosmake robot_node
+```
+
 Connect with controller
 ------
 ```
-roslaunch launch mcubeSystem.launch
+roslaunch robot_node mcubeSystem.launch
 ```
 
 
