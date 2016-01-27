@@ -1,8 +1,0 @@
-# Grasp service: Feed object by hand
-
-int64 id
----
-int64 error
-string logFileName
-int64 ret
-string msg

@@ -1,5 +1,0 @@
-#Service to call the general hand calibration routine
-string folderName   # Folder name in the results folder to save to
----
-int64 ret     # Set to 1 (success) or 0 (error)
-string msg    # Error description

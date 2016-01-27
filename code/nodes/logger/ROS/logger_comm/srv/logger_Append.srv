@@ -1,6 +1,0 @@
-# Service to append information to a logged file.
-string filename      # Name of the logFile where to append information (relative to logFolder).
-string info          # String to append.
----
-int64 ret          # Set to 1 (success) or 0 (error)
-string msg         # Error description

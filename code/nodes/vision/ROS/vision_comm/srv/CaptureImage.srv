@@ -1,5 +1,0 @@
-Header header		# possible record keeping later
-
-int32 cameraNum
----
-string filename

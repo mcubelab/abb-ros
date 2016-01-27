@@ -1,6 +1,0 @@
-# Service to Set Container in Display node
-int64 containerId
-int64 topicId
----
-int64 ret
-string msg

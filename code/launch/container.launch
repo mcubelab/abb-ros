@@ -1,6 +1,0 @@
-<launch>
-	<include file="$(find openni_camera)/launch/openni_node.launch"/>
-	<rosparam command="load" file="$(find parameters)/transform_params.yaml"/>
-	<node name="container_node" pkg="container_node" type="container_node"
-		output="screen"/>
-</launch>

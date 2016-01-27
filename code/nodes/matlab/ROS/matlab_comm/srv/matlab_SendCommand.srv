@@ -1,5 +1,0 @@
-# Service to send a command to MATLAB through the Matlab engine
-string command    # Command to be executed in the MATLAB command line
----
-int64 ret         # Set to 1 (success) or 0 (error)
-string msg        # Error description

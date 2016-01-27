@@ -1,5 +1,0 @@
-<launch>
-    <include file="$(find launch)/system.launch"/>
-    <node pkg="launch" type="run_vision_script" name="run_vision_script" />
-    <node pkg="launch" type="run_display_script" name="run_display_script" />
-</launch>

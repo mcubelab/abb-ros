@@ -1,6 +1,0 @@
-# Service to train a grasp learning model
-float64[] params  # The parameters we used while grasping
-bool singulated   # Whether or not we singulated a marker
----
-int64 ret
-string msg

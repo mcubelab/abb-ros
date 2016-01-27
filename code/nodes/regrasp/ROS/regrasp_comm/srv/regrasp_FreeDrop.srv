@@ -1,5 +1,0 @@
-# Service to put the objects on the table with another side of it. Need to drop a little bit.
-# number of fingers defined in hand_comm.h
----
-int64 ret            # Set to 1 (success) or 0 (error)
-string msg           # Error description

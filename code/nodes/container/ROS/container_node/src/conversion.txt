@@ -1,1 +1,0 @@
-532mm on the table is 272 pixels in he depth picture the kinect takes.

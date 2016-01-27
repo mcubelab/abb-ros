@@ -1,3 +1,0 @@
-<launch>
-    <node pkg="launch" type="run_vision_script" name="run_vision_script" output="screen"/>
-</launch>

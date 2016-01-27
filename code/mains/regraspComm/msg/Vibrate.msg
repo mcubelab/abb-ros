@@ -1,1 +1,0 @@
-float64 vibrate_angle
