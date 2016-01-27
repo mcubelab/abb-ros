@@ -2,8 +2,13 @@ build/
 bin/
 lib/
 msg_gen/
-msg/
 srv_gen/
+robot_comm/src/robot_comm/msg/*.py
+robot_comm/src/robot_comm/srv/*.py
+robot_comm/src/robot_comm/__init__.py
+
+srv/*.py
 
 *~
 *.pyc
+*.o
