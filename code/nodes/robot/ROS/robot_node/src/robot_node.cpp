@@ -34,6 +34,7 @@ RobotController::~RobotController() {
   handle_robot_SetInertia.shutdown();
   handle_robot_SetWorkObject.shutdown();
   handle_robot_SetSpeed.shutdown();
+  handle_robot_SetAcc.shutdown();
   handle_robot_GetState.shutdown();
   handle_robot_SetZone.shutdown();
   handle_robot_SetTrackDist.shutdown();
@@ -47,11 +48,19 @@ RobotController::~RobotController() {
   handle_robot_CartesianLog.shutdown();
   handle_robot_JointsLog.shutdown();
   handle_robot_ForceLog.shutdown();
+  handle_robot_RRIJointState.shutdown();
+  handle_robot_RRICartState.shutdown();
+  
+  char message[MAX_BUFFER];
+  
+  //Close RRI connections
+  strcpy(message, ABBInterpreter::closeRRI().c_str());
+  send(robotMotionSocket, message, strlen(message), 0);
 
   //Close connections
-  char message[MAX_BUFFER];
   strcpy(message, ABBInterpreter::closeConnection().c_str());
   send(robotMotionSocket, message, strlen(message), 0);
+  
   ros::Duration(1.0).sleep();
   close(robotMotionSocket);
   close(robotLoggerSocket);
@@ -65,6 +74,7 @@ bool RobotController::init(std::string id)
   std::string robotIp;
   int robotMotionPort;
   int robotLoggerPort;
+  int hostRRIPort;
 
   motionConnected = false;
   loggerConnected = false;
@@ -76,6 +86,7 @@ bool RobotController::init(std::string id)
   
   node->getParam(robotname_sl + "/robotIp",robotIp);
   node->getParam(robotname_sl + "/robotMotionPort",robotMotionPort);
+  
   connectMotionServer(robotIp.c_str(), robotMotionPort);
   if(!motionConnected)
   {
@@ -92,6 +103,8 @@ bool RobotController::init(std::string id)
         "Continuing without robot feedback.");
   }
 
+
+  
   // Setup our non-blocking variables
   non_blocking = false;
   do_nb_move = false;
@@ -118,6 +131,16 @@ bool RobotController::init(std::string id)
     return false;
   }
 
+  //Establish RRI connection
+  node->getParam(robotname_sl + "/hostRRIPort",hostRRIPort);
+  ROS_INFO("ROBOT_CONTROLLER: Establishing RRI connection on port %d...", hostRRIPort);
+  establishRRI(hostRRIPort);
+  if(!RRIConnected)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: Not able to establish RRI. "
+        "Continuing without RRI.");
+  }
+  
   return true;
 }
 
@@ -208,6 +231,10 @@ void RobotController::advertiseTopics()
     node->advertise<robot_comm::robot_JointsLog>(robotname + "_JointsLog", 100);
   handle_robot_ForceLog = 
     node->advertise<robot_comm::robot_ForceLog>(robotname + "_ForceLog", 100);
+  handle_robot_RRIJointState = 
+    node->advertise<sensor_msgs::JointState>(robotname + "_RRIJointState", 100);
+  handle_robot_RRICartState = 
+    node->advertise<sensor_msgs::JointState>(robotname + "_RRICartState", 100);
 }
 
 // Advertise the services that the robot will be listening for
@@ -239,6 +266,8 @@ void RobotController::advertiseServices()
       &RobotController::robot_SetWorkObject, this);
   handle_robot_SetSpeed = node->advertiseService(robotname + "_SetSpeed", 
       &RobotController::robot_SetSpeed, this);
+  handle_robot_SetAcc = node->advertiseService(robotname + "_SetAcc", 
+      &RobotController::robot_SetAcc, this);
   handle_robot_GetState = node->advertiseService(robotname + "_GetState", 
       &RobotController::robot_GetState, this);
   handle_robot_SetZone = node->advertiseService(robotname + "_SetZone", 
@@ -854,6 +883,26 @@ bool RobotController::robot_SetSpeed(
   return true;
 }
 
+// Set the speed of our robot. Note that if we are in non-blocking mode, we 
+// call a separate method which sets step sizes in addition to speed.
+// Otherwise, we just call our generic setSpeed method.
+bool RobotController::robot_SetAcc(
+    robot_comm::robot_SetAcc::Request& req, 
+    robot_comm::robot_SetAcc::Response& res)
+{
+  if (!setAcc(req.acc, req.deacc))
+  {
+    res.ret = 0;
+    res.msg = "ROBOT_CONTROLLER: Not able to change the speed of the robot.";
+    return false;
+  }
+
+  res.ret = 1;
+  res.msg = "ROBOT_CONTROLLER: OK.";
+  return true;
+}
+
+
 // Get the current state of the robot. 
 bool RobotController::robot_GetState(
     robot_comm::robot_GetState::Request& req, 
@@ -1094,58 +1143,58 @@ bool RobotController::robot_AddBuffer(
     robot_comm::robot_AddBuffer::Request& req, 
     robot_comm::robot_AddBuffer::Response& res)
 {
-	if (addBuffer(req.x, req.y, req.z, req.q0, req.qx, req.qy, req.qz))
-	{
-		res.ret = 1;
-		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = 0;
-		res.msg = "ROBOT_CONTROLLER: Not able to add TCP pose to buffer ";
-		res.msg += "the robot.";
-		return false;
-	}
-	
+      if (addBuffer(req.x, req.y, req.z, req.q0, req.qx, req.qy, req.qz))
+      {
+            res.ret = 1;
+            res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = 0;
+            res.msg = "ROBOT_CONTROLLER: Not able to add TCP pose to buffer ";
+            res.msg += "the robot.";
+            return false;
+      }
+      
 }
 
 bool RobotController::robot_ExecuteBuffer(
     robot_comm::robot_ExecuteBuffer::Request& req, 
     robot_comm::robot_ExecuteBuffer::Response& res)
 {
-	if (executeBuffer())
-	{
-		res.ret = errorId;
- 		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = errorId;
- 		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered TCP pose trajectory ";
-		return true;
-	}
-	
+      if (executeBuffer())
+      {
+            res.ret = errorId;
+             res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = errorId;
+             res.msg = "ROBOT_CONTROLLER: Not able to execute buffered TCP pose trajectory ";
+            return true;
+      }
+      
 }
 
 bool RobotController::robot_ClearBuffer(
     robot_comm::robot_ClearBuffer::Request& req, 
     robot_comm::robot_ClearBuffer::Response& res)
 {
-	if (clearBuffer())
-	{
-		res.ret = 1;
-		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = 0;
-		res.msg = "ROBOT_CONTROLLER: Not able to clear buffered TCP pose trajectories ";
-		return false;
-	}
-	
+      if (clearBuffer())
+      {
+            res.ret = 1;
+            res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = 0;
+            res.msg = "ROBOT_CONTROLLER: Not able to clear buffered TCP pose trajectories ";
+            return false;
+      }
+      
 }
 
 // Joint position buffer commands
@@ -1153,58 +1202,58 @@ bool RobotController::robot_AddJointPosBuffer(
     robot_comm::robot_AddJointPosBuffer::Request& req, 
     robot_comm::robot_AddJointPosBuffer::Response& res)
 {
-	if (addJointPosBuffer(req.j1, req.j2, req.j3, req.j4, req.j5, req.j6))
-	{
-		res.ret = 1;
-		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = 0;
-		res.msg = "ROBOT_CONTROLLER: Not able to add joint position buffer ";
-		res.msg += "the robot.";
-		return false;
-	}
-	
+      if (addJointPosBuffer(req.j1, req.j2, req.j3, req.j4, req.j5, req.j6))
+      {
+            res.ret = 1;
+            res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = 0;
+            res.msg = "ROBOT_CONTROLLER: Not able to add joint position buffer ";
+            res.msg += "the robot.";
+            return false;
+      }
+      
 }
 
 bool RobotController::robot_ExecuteJointPosBuffer(
     robot_comm::robot_ExecuteJointPosBuffer::Request& req, 
     robot_comm::robot_ExecuteJointPosBuffer::Response& res)
 {
-	if (executeJointPosBuffer())
-	{
-		res.ret = errorId;
- 		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = errorId;
- 		res.msg = "ROBOT_CONTROLLER: Not able to execute buffered joint trajectories ";
-		return true;
-	}
-	
+      if (executeJointPosBuffer())
+      {
+            res.ret = errorId;
+             res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = errorId;
+             res.msg = "ROBOT_CONTROLLER: Not able to execute buffered joint trajectories ";
+            return true;
+      }
+      
 }
 
 bool RobotController::robot_ClearJointPosBuffer(
     robot_comm::robot_ClearJointPosBuffer::Request& req, 
     robot_comm::robot_ClearJointPosBuffer::Response& res)
 {
-	if (clearJointPosBuffer())
-	{
-		res.ret = 1;
-		res.msg = "ROBOT_CONTROLLER: OK.";
-		return true;
-	}
-	else
-	{
-		res.ret = 0;
-		res.msg = "ROBOT_CONTROLLER: Not able to clear buffered joint trajectories ";
-		return false;
-	}
-	
+      if (clearJointPosBuffer())
+      {
+            res.ret = 1;
+            res.msg = "ROBOT_CONTROLLER: OK.";
+            return true;
+      }
+      else
+      {
+            res.ret = 0;
+            res.msg = "ROBOT_CONTROLLER: Not able to clear buffered joint trajectories ";
+            return false;
+      }
+      
 }
 
 
@@ -1407,36 +1456,36 @@ bool RobotController::setTool(double x, double y, double z,
     {
       // This is dangerous if we are currently executing a non-blocking move
       if (do_nb_move)
-	return false;
+      return false;
       
       char message[MAX_BUFFER];
       char reply[MAX_BUFFER];
       int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
       strcpy(message, ABBInterpreter::setTool(x, y, z, q0, qx, qy, qz, 
-					      randNumber).c_str());
+                                    randNumber).c_str());
 
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // If the command was successful, remember our new tool frame
-	  curToolP[0] = x;
-	  curToolP[1] = y;
-	  curToolP[2] = z;
-	  curToolQ[0] = q0;
-	  curToolQ[1] = qx;
-	  curToolQ[2] = qy;
-	  curToolQ[3] = qz;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/toolX",x);
-	  node->setParam(robotname_sl + "/toolY",y);
-	  node->setParam(robotname_sl + "/toolZ",z);
-	  node->setParam(robotname_sl + "/toolQ0",q0);
-	  node->setParam(robotname_sl + "/toolQX",qx);
-	  node->setParam(robotname_sl + "/toolQY",qy);
-	  node->setParam(robotname_sl + "/toolQZ",qz);
-	  return true;
-	}
+      {
+        // If the command was successful, remember our new tool frame
+        curToolP[0] = x;
+        curToolP[1] = y;
+        curToolP[2] = z;
+        curToolQ[0] = q0;
+        curToolQ[1] = qx;
+        curToolQ[2] = qy;
+        curToolQ[3] = qz;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/toolX",x);
+        node->setParam(robotname_sl + "/toolY",y);
+        node->setParam(robotname_sl + "/toolZ",z);
+        node->setParam(robotname_sl + "/toolQ0",q0);
+        node->setParam(robotname_sl + "/toolQX",qx);
+        node->setParam(robotname_sl + "/toolQY",qy);
+        node->setParam(robotname_sl + "/toolQZ",qz);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
@@ -1451,36 +1500,36 @@ bool RobotController::setInertia(double m, double cgx, double cgy,
     {
       // This is dangerous if we are currently executing a non-blocking move
       if (do_nb_move)
-	return false;
+      return false;
       
       char message[MAX_BUFFER];
       char reply[MAX_BUFFER];
       int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
       strcpy(message, ABBInterpreter::setInertia(m, cgx, cgy, cgz, ix, iy, iz, 
-					      randNumber).c_str());
+                                    randNumber).c_str());
 
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // If the command was successful, remember our new inertia
-	  curToolM = m;
-	  curToolCG[0] = cgx;
-	  curToolCG[1] = cgy;
-	  curToolCG[2] = cgz;
-	  curToolI[0] = ix;
-	  curToolI[1] = iy;
-	  curToolI[2] = iz;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/toolMass",m);
-	  node->setParam(robotname_sl + "/toolCGX",cgx);
-	  node->setParam(robotname_sl + "/toolCGY",cgy);
-	  node->setParam(robotname_sl + "/toolCGZ",cgz);
-	  node->setParam(robotname_sl + "/toolIX",ix);
-	  node->setParam(robotname_sl + "/toolIY",iy);
-	  node->setParam(robotname_sl + "/toolIZ",iz);
-	  return true;
-	}
+      {
+        // If the command was successful, remember our new inertia
+        curToolM = m;
+        curToolCG[0] = cgx;
+        curToolCG[1] = cgy;
+        curToolCG[2] = cgz;
+        curToolI[0] = ix;
+        curToolI[1] = iy;
+        curToolI[2] = iz;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/toolMass",m);
+        node->setParam(robotname_sl + "/toolCGX",cgx);
+        node->setParam(robotname_sl + "/toolCGY",cgy);
+        node->setParam(robotname_sl + "/toolCGZ",cgz);
+        node->setParam(robotname_sl + "/toolIX",ix);
+        node->setParam(robotname_sl + "/toolIY",iy);
+        node->setParam(robotname_sl + "/toolIZ",iz);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
@@ -1495,35 +1544,35 @@ bool RobotController::setWorkObject(double x, double y, double z,
     {
       // This is dangerous if we are in the middle of a non-blocking move
       if (do_nb_move)
-	return false;
+      return false;
       
       char message[MAX_BUFFER];
       char reply[MAX_BUFFER];
       int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
       strcpy(message, ABBInterpreter::setWorkObject(x, y, z, q0, qx, qy, qz, 
-						    randNumber).c_str());
+                                        randNumber).c_str());
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // If the command was successful, remember our new work object
-	  curWorkP[0] = x;
-	  curWorkP[1] = y;
-	  curWorkP[2] = z;
-	  curWorkQ[0] = q0;
-	  curWorkQ[1] = qx;
-	  curWorkQ[2] = qy;
-	  curWorkQ[3] = qz;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/workobjectX",x);
-	  node->setParam(robotname_sl + "/workobjectY",y);
-	  node->setParam(robotname_sl + "/workobjectZ",z);
-	  node->setParam(robotname_sl + "/workobjectQ0",q0);
-	  node->setParam(robotname_sl + "/workobjectQX",qx);
-	  node->setParam(robotname_sl + "/workobjectQY",qy);
-	  node->setParam(robotname_sl + "/workobjectQZ",qz);
-	  return true;
-	}
+      {
+        // If the command was successful, remember our new work object
+        curWorkP[0] = x;
+        curWorkP[1] = y;
+        curWorkP[2] = z;
+        curWorkQ[0] = q0;
+        curWorkQ[1] = qx;
+        curWorkQ[2] = qy;
+        curWorkQ[3] = qz;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/workobjectX",x);
+        node->setParam(robotname_sl + "/workobjectY",y);
+        node->setParam(robotname_sl + "/workobjectZ",z);
+        node->setParam(robotname_sl + "/workobjectQ0",q0);
+        node->setParam(robotname_sl + "/workobjectQX",qx);
+        node->setParam(robotname_sl + "/workobjectQY",qy);
+        node->setParam(robotname_sl + "/workobjectQZ",qz);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
@@ -1537,28 +1586,45 @@ bool RobotController::setSpeed(double tcp, double ori)
       // This is dangerous if we are currently executing a non-blocking move
       // (unless we're sure and set changing_nb_speed to true)
       if (!changing_nb_speed && do_nb_move)
-	return false;
+      return false;
 
       char message[MAX_BUFFER];
       char reply[MAX_BUFFER];
       int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
       strcpy(message, ABBInterpreter::setSpeed(tcp, ori, 
-					       randNumber).c_str());
+                                     randNumber).c_str());
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // If we successfully changed the speed, remember our new speed values
-	  curSpd[0] = tcp;
-	  curSpd[1] = ori;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/speedTCP",tcp);
-	  node->setParam(robotname_sl + "/speedORI",ori);
-	  return true;
-	}
+      {
+        // If we successfully changed the speed, remember our new speed values
+        curSpd[0] = tcp;
+        curSpd[1] = ori;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/speedTCP",tcp);
+        node->setParam(robotname_sl + "/speedORI",ori);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
+
+// Set the acceleration of the robot
+bool RobotController::setAcc(double acc, double deacc)
+{
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::setAcc(acc, deacc, 
+                                     randNumber).c_str());
+      if(sendAndReceive(message, strlen(message), reply, randNumber))
+      {
+        return true;
+      }
+      else
+      return false;
+}
+
 
 // Set the zone of our robot
 bool RobotController::setZone(int z)
@@ -1568,7 +1634,7 @@ bool RobotController::setZone(int z)
     {
       // This is dangerous if we are in the middle of a non-blocking move
       if (do_nb_move)
-	return false;
+      return false;
       
       char message[MAX_BUFFER];
       char reply[MAX_BUFFER];
@@ -1576,25 +1642,25 @@ bool RobotController::setZone(int z)
       
       // Make sure the specified zone number exists
       if (z < 0 || z > NUM_ZONES)
-	{
-	  ROS_INFO("ROBOT_CONTROLLER: SetZone command not sent. Invalide zone mode.");
-	  return false;
-	}
+      {
+        ROS_INFO("ROBOT_CONTROLLER: SetZone command not sent. Invalide zone mode.");
+        return false;
+      }
       
       strcpy(message, ABBInterpreter::setZone((z == ZONE_FINE), 
-					      zone_data[z].p_tcp, zone_data[z].p_ori, zone_data[z].ori, 
-					      randNumber).c_str());
+                                    zone_data[z].p_tcp, zone_data[z].p_ori, zone_data[z].ori, 
+                                    randNumber).c_str());
       
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // If we set the zone successfully, remember our new zone
-	  curZone = z;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/zone",z);
-	  return true;
-	}
+      {
+        // If we set the zone successfully, remember our new zone
+        curZone = z;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/zone",z);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
@@ -1661,24 +1727,24 @@ bool RobotController::setVacuum(int v)
       
       // Make sure we are either opening or closing the vacuum
       if((v != VACUUM_OPEN) && (v != VACUUM_CLOSE))
-	{
-	  ROS_INFO("ROBOT_CONTROLLER: SetVacuum command not sent. "
-		   "Invalid communication mode.");
-	  return false;
-	}
+      {
+        ROS_INFO("ROBOT_CONTROLLER: SetVacuum command not sent. "
+               "Invalid communication mode.");
+        return false;
+      }
       
       strcpy(message, ABBInterpreter::setVacuum(v, randNumber).c_str());
       
       if(sendAndReceive(message, strlen(message), reply, randNumber))
-	{
-	  // Remember the current state of the vacuum if the command sent
-	  curVacuum = v;
-	  // We also save it to the parameter server
-	  node->setParam(robotname_sl + "/vacuum",v);
-	  return true;
-	}
+      {
+        // Remember the current state of the vacuum if the command sent
+        curVacuum = v;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/vacuum",v);
+        return true;
+      }
       else
-	return false;
+      return false;
     }
   return true;
 }
@@ -1697,12 +1763,12 @@ bool RobotController::is_moving()
 // Send TCP pose trajectories to a buffer 1 at a time
 bool RobotController::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz)
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::addBuffer(x, y, z, q0, qx, qy, qz, randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
-	  return true;
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::addBuffer(x, y, z, q0, qx, qy, qz, randNumber).c_str());
+      if(sendAndReceive(message,strlen(message), reply, randNumber))
+        return true;
     else
       return false;
 }
@@ -1710,11 +1776,11 @@ bool RobotController::addBuffer(double x, double y, double z, double q0, double 
 // Execute the TCP poses added to the buffer previously
 bool RobotController::executeBuffer()
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::executeBuffer(randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::executeBuffer(randNumber).c_str());
+      if(sendAndReceive(message,strlen(message), reply, randNumber))
       return true;
     else
       return false;
@@ -1723,11 +1789,11 @@ bool RobotController::executeBuffer()
 // Clear the TCP pose buffer
 bool RobotController::clearBuffer()
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::clearBuffer(randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::clearBuffer(randNumber).c_str());
+      if(sendAndReceive(message,strlen(message), reply, randNumber))
       return true;
     else
       return false;
@@ -1736,20 +1802,20 @@ bool RobotController::clearBuffer()
 // Set adds joint positions 1 configuration at a time to the joint position buffer
 bool RobotController::addJointPosBuffer(double j1, double j2, double j3, double j4, double j5, double j6)
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::addJointPosBuffer(j1, j2, j3, j4, j5, j6, randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
-	  return true;
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::addJointPosBuffer(j1, j2, j3, j4, j5, j6, randNumber).c_str());
+      if(sendAndReceive(message,strlen(message), reply, randNumber))
+        return true;
     else
       return false;
-	
-	/* Template
-	// Command the robot to move to a given joint configuration
+      
+      /* Template
+      // Command the robot to move to a given joint configuration
     bool RobotController::setJoints(double j1, double j2, double j3, double j4,
     double j5, double j6)
-	{
+      {
     // We will do some collision and sanity checks here
 
     char message[MAX_BUFFER];
@@ -1772,19 +1838,19 @@ bool RobotController::addJointPosBuffer(double j1, double j2, double j3, double 
     }
     else
     return false;
-    }	
-	*/
-	
+    }      
+      */
+      
 }
 
 // Execute the joint configurations added to the buffer previously
 bool RobotController::executeJointPosBuffer()
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::executeJointPosBuffer(randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
+      char message[MAX_BUFFER];
+      char reply[MAX_BUFFER];
+      int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+      strcpy(message, ABBInterpreter::executeJointPosBuffer(randNumber).c_str());
+      if(sendAndReceive(message,strlen(message), reply, randNumber))
       return true;
     else
       return false;
@@ -1793,11 +1859,11 @@ bool RobotController::executeJointPosBuffer()
 // Clear the joint position buffer
 bool RobotController::clearJointPosBuffer()
 {
-	char message[MAX_BUFFER];
-	char reply[MAX_BUFFER];
-	int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
-	strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
-	if(sendAndReceive(message,strlen(message), reply, randNumber))
+    char message[MAX_BUFFER];
+    char reply[MAX_BUFFER];
+    int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+    strcpy(message, ABBInterpreter::clearJointPosBuffer(randNumber).c_str());
+    if(sendAndReceive(message,strlen(message), reply, randNumber))
       return true;
     else
       return false;
@@ -1806,6 +1872,35 @@ bool RobotController::clearJointPosBuffer()
 //////////////////////////////////////////////////////////////////////////////
 // Connect to Servers on Robot
 //////////////////////////////////////////////////////////////////////////////
+
+
+// Establish RRI connection
+bool RobotController::establishRRI(int port){
+  if(RRIConnected)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: RRI already connected.");
+    return false;
+  }
+  
+  try {
+    // Create an RRI UDP socket
+    RRIsock = new UDPSocket(port);
+    
+    char message[MAX_BUFFER];
+    char reply[MAX_BUFFER];
+    int randNumber = (int)(ID_CODE_MAX*(double)rand()/(double)(RAND_MAX));
+    strcpy(message, ABBInterpreter::connectRRI(randNumber).c_str());
+    if(sendAndReceive(message,strlen(message), reply, randNumber)){
+      RRIConnected = true;
+      return true;
+    }
+    else
+      return false;
+  } catch (SocketException &e) {
+    ROS_INFO("ROBOT_CONTROLLER: %s", e.what());
+    return false;
+  }
+}
 
 // Connect to the logger server
 bool RobotController::connectLoggerServer(const char* ip, int port)
@@ -2044,7 +2139,7 @@ void RobotController::logCallback(const ros::TimerEvent&)
     partialBuffer = buffer;
 
     // Each message starts with a '#' character. Read messages one at a time
-    while((partialBuffer = strchr(partialBuffer,'#'))!=NULL)		
+    while((partialBuffer = strchr(partialBuffer,'#'))!=NULL)            
     {
       // The number after the start character is the type of message
       sscanf(partialBuffer,"# %d", &code);
@@ -2194,6 +2289,84 @@ void RobotController::logCallback(const ros::TimerEvent&)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// RRI Call Back
+//
+// This function receives robot position data to see if any new position
+// or force information has been transmitted by udp. If any data has been
+// sent, it reads all of it, saves the newest of each message, and publishes
+// any new position, joint, or force information it gets. This function is
+// called every time there is a timer event.
+//////////////////////////////////////////////////////////////////////////////
+
+
+void RobotController::rriCallback(const ros::TimerEvent&)
+{
+  char buffer[MAX_BUFFER];
+  int recvMsgSize;
+  string sourceAddress;             // Address of datagram source
+  unsigned short sourcePort;        // Port of datagram source
+  
+  // Read all information from the tcp/ip socket
+  
+  try{
+    if ((recvMsgSize = RRIsock->recvFrom(buffer, MAX_BUFFER-1, sourceAddress, sourcePort)) > 0)
+    {
+      // Prepare the msgs
+      sensor_msgs::JointState pos;
+      pos.header.stamp = ros::Time::now();
+      sensor_msgs::JointState js;
+      js.header.stamp = pos.header.stamp;
+      
+      // Parse it
+      buffer[recvMsgSize] = '\0';
+      xmldoc.Clear();
+      xmldoc.Parse( buffer );
+      TiXmlElement* element = xmldoc.FirstChildElement( "RobData" ); 
+      if (element){
+        
+        // For TCP position 
+        TiXmlElement* Pact = element->FirstChildElement("P_act");
+        double P_act[6];  // X, Y, Z, Rx, Ry, Rz
+        string P_element_names[] = {"X", "Y", "Z", "Rx", "Ry", "Rz"};
+        
+        for (int i=0;i<6;i++)
+          Pact->QueryDoubleAttribute( P_element_names[i].c_str(), &P_act[i]);
+        
+        // publish it
+        for (int i=0;i<6;i++){
+          if (i<3)  pos.position.push_back(P_act[i]);
+          else      pos.position.push_back(P_act[i]);
+          pos.name.push_back(P_element_names[i]);
+        }
+        handle_robot_RRICartState.publish(pos);
+          
+        // For joints position
+        TiXmlElement* Jact = element->FirstChildElement("J_act");
+        double J_act[6];  // J1, J2, J3, J4, J5, J6
+        string J_element_names[] = {"J1", "J2", "J3", "J4", "J5", "J6"};
+        for (int i=0;i<6;i++)
+          Jact->QueryDoubleAttribute( J_element_names[i].c_str(), &J_act[i]);
+          
+        // publish it
+        for (int i=0;i<6;i++)
+          js.position.push_back(J_act[i]);
+          
+        js.name.push_back("joint1");
+        js.name.push_back("joint2");
+        js.name.push_back("joint3");
+        js.name.push_back("joint4");
+        js.name.push_back("joint5");
+        js.name.push_back("joint6");
+        handle_robot_RRIJointState.publish(js);
+      }
+    }
+  } catch (SocketException &e) {
+    // no data
+    //cerr << e.what() << endl;
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Main Thread for Logger
 //
 // This is the main function for our logger thread. We simply start a ROS 
@@ -2210,13 +2383,38 @@ void *loggerMain(void *args)
   ros::Timer loggerTimer;
   loggerTimer = ABBrobot->node->createTimer(ros::Duration(0.003), 
       &RobotController::logCallback, ABBrobot);
-
   // Now simply wait until the program is shut down
   ros::waitForShutdown();
   loggerTimer.stop();
 
   pthread_exit((void*) 0);
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// Main Thread for RRI
+//
+// This is the main function for our logger thread. We simply start a ROS 
+// timer event and get it to call our loggerCallback function at a 
+// specified interval. This exits when ROS shuts down.
+//////////////////////////////////////////////////////////////////////////////
+void *rriMain(void *args)
+{
+  //Recover the pointer to the main node
+  RobotController* ABBrobot;
+  ABBrobot = (RobotController*) args;
+
+  // Create a timer to look at the log data
+  ros::Timer rriTimer;
+  rriTimer = ABBrobot->node->createTimer(ros::Duration(0.001), 
+      &RobotController::rriCallback, ABBrobot);
+
+  // Now simply wait until the program is shut down
+  ros::waitForShutdown();
+  rriTimer.stop();
+
+  pthread_exit((void*) 0);
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Main Thread for Non-Blocking
@@ -2537,6 +2735,19 @@ int main(int argc, char** argv)
     ROS_INFO("ROBOT_CONTROLLER: Unable to create logger thread. "
         "Error number: %d.",errno);
   }
+  
+  // Create a dedicated thread for rri broadcasts
+  pthread_t rriThread;
+  pthread_attr_t attrR;
+  pthread_attr_init(&attrR);
+  pthread_attr_setdetachstate(&attrR, PTHREAD_CREATE_JOINABLE);
+
+  if (pthread_create(&rriThread, &attrR, 
+        rriMain, (void*)&ABBrobot) != 0)
+  {
+    ROS_INFO("ROBOT_CONTROLLER: Unable to create rri thread. "
+        "Error number: %d.",errno);
+  }
 
   // Create a dedicated thread for non-blocking moves
   pthread_t nonBlockThread;
@@ -2563,7 +2774,7 @@ int main(int argc, char** argv)
   ROS_INFO("ROBOT_CONTROLLER: Running node /robot_controller...");
   // Multithreaded spinner so that callbacks 
   // can be handled on separate threads.
-  ros::MultiThreadedSpinner spinner(3); // We have 3 total threads
+  ros::MultiThreadedSpinner spinner(4); // We have 4 total threads
   spinner.spin();
   ROS_INFO("ROBOT_CONTROLLER: Shutting down node /robot_controller...");
 

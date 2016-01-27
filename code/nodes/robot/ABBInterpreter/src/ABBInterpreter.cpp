@@ -353,6 +353,31 @@ string ABBInterpreter::setSpeed(double tcp, double ori, int idCode)
   return (msg);
 }
 
+
+/**
+  * Formats message to set the TCP acceleration of the ABB robot.
+  * @param acc Linear acceleration of the TCP in mm/s^2 (0.1-28 m/s^2).
+  * @param deacc Linear deacceleration of the TCP in mm/s^2 (0.1-28 m/s^2).
+  * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
+  * @return String to be sent to ABB server.
+  */
+string ABBInterpreter::setAcc(double acc, double deacc, int idCode)
+{
+  char buff[20];
+  string msg("15 ");//instruction code;
+  
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  sprintf(buff,"%08.2lf ",acc);
+  msg += buff ;
+  sprintf(buff,"%08.2lf ",deacc);
+  msg += buff ;
+  msg += "#";
+
+  return (msg);
+}
+
+
 /*
   * Deprecated: Formats message to set the zone mode of the ABB robot (distance from where to interpolate to the next destination).
     Possible modes:
@@ -511,19 +536,6 @@ string ABBInterpreter::addJointPosBuffer(double q1, double q2, double q3, double
     msg += "#";
 	return (msg);
 	
-	/*    def addJointPosBuffer(self,joint_pos):
-	#appends single joint position to the buffer
-	if len(joint_pos) == 6:
-            msg = "37 "
-            msg = msg + format(joint_pos[0],"+08.2f")+" "+ format(joint_pos[1],"+08.2f")+" "+ format(joint_pos[2],"+08.2f")+" "+ format(joint_pos[3],"+08.2f")+" "+ format(joint_pos[4],"+08.2f")+" "+ format(joint_pos[5],"+08.2f")+" #"
-            if self.verbose: print 'addJointBuffer:',msg
-            self.robsock.send(msg)
-            data = self.robsock.recv(self.BUFLEN)
-            time.sleep(self.idel)
-            return data
-        else:
-            return False
-     */
  }
         
 string ABBInterpreter::clearJointPosBuffer(int idCode)
@@ -535,12 +547,6 @@ string ABBInterpreter::clearJointPosBuffer(int idCode)
 	msg += "#";
 	return (msg);
 	
-	/*def clearJointPosBuffer(self):
-         msg = "38 #"
-         self.robsock.send(msg)
-         data = self.robsock.recv(self.BUFLEN)
-         return data
-    */
 }
 
 /*
@@ -564,14 +570,28 @@ string ABBInterpreter::executeJointPosBuffer(int idCode)
 	msg += "#";
 	return (msg);
 	
-	/*
-	def executeJointPosBuffer(self):
-        msg = "40 #"
-        self.robsock.send(msg)
-        data = self.robsock.recv(self.BUFLEN)
-        return data
-    */
 }  
+
+string ABBInterpreter::connectRRI(int idCode)
+{
+  char buff[20];
+  string msg("50 ");
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  msg += "#";
+  return (msg);
+}
+
+string ABBInterpreter::closeRRI(int idCode)
+{
+  char buff[20];
+  string msg("51 ");
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  msg += "#";
+  return (msg);
+}
+
 
 /**
   * Formats message to call special command.

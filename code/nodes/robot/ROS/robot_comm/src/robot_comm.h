@@ -17,6 +17,7 @@
 #include <robot_comm/robot_SetJoints.h>
 #include <robot_comm/robot_GetJoints.h>
 #include <robot_comm/robot_SetSpeed.h>
+#include <robot_comm/robot_SetAcc.h>
 #include <robot_comm/robot_GetState.h>
 #include <robot_comm/robot_SetVacuum.h>
 #include <robot_comm/robot_SpecialCommand.h>
@@ -122,6 +123,7 @@ class RobotComm
     bool SetComm(const int mode);
     bool SetSpeed(const double tcp, const double ori);
     bool GetSpeed(double &tcp, double &ori);
+    bool SetAcc(const double acc, const double deacc);
     bool GetWorkObject(HomogTransf &workObject);
     bool GetWorkObject(double workObject[7]);
     bool GetTool(HomogTransf &tool);
@@ -190,6 +192,7 @@ class RobotComm
     ros::ServiceClient handle_robot_SetJoints;
     ros::ServiceClient handle_robot_GetJoints;
     ros::ServiceClient handle_robot_SetSpeed;
+    ros::ServiceClient handle_robot_SetAcc;
     ros::ServiceClient handle_robot_GetState;
     ros::ServiceClient handle_robot_SetTrackDist;
     ros::ServiceClient handle_robot_SpecialCommand;
@@ -222,6 +225,7 @@ class RobotComm
     robot_comm::robot_GetJoints robot_GetJoints_srv;
     robot_comm::robot_SetSpeed robot_SetSpeed_srv;
     robot_comm::robot_GetState robot_GetState_srv;
+    robot_comm::robot_SetAcc robot_SetAcc_srv;
     robot_comm::robot_SetTrackDist robot_SetTrackDist_srv;
     robot_comm::robot_SpecialCommand robot_SpecialCommand_srv;
     robot_comm::robot_SetVacuum robot_SetVacuum_srv;

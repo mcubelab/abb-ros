@@ -13,6 +13,9 @@
 
 #include "ABBInterpreter.h"
 
+#include "PracticalSocket/PracticalSocket.h" // For UDPSocket and SocketException
+#include "tinyxml.h"
+
 //ROS specific
 #include <ros/ros.h>
 #include <robot_comm/robot_comm.h>
@@ -120,6 +123,9 @@ class RobotController
   bool robot_SetSpeed(
       robot_comm::robot_SetSpeed::Request& req, 
       robot_comm::robot_SetSpeed::Response& res);
+  bool robot_SetAcc(
+      robot_comm::robot_SetAcc::Request& req, 
+      robot_comm::robot_SetAcc::Response& res);
   bool robot_SetZone(
       robot_comm::robot_SetZone::Request& req, 
       robot_comm::robot_SetZone::Response& res);
@@ -160,6 +166,9 @@ class RobotController
 
   // Call back function for the logging which will be called by a timer event
   void logCallback(const ros::TimerEvent&);
+  
+  // Call back function for the RRI which will be called by a timer event
+  void rriCallback(const ros::TimerEvent&);
   
   // Public access to the ROS node
   ros::NodeHandle *node;
@@ -219,12 +228,15 @@ class RobotController
   // Socket Variables
   bool motionConnected;
   bool loggerConnected;
+  bool RRIConnected;
   int robotMotionSocket;
   int robotLoggerSocket;
+  UDPSocket* RRIsock;
 
   // Connect to servers on the robot
   bool connectMotionServer(const char* ip, int port);
   bool connectLoggerServer(const char* ip, int port);
+  bool establishRRI(int port);
   
   // Sets up the default robot configuration
   bool defaultRobotConfiguration();
@@ -235,6 +247,8 @@ class RobotController
   ros::Publisher handle_robot_CartesianLog;
   ros::Publisher handle_robot_JointsLog;
   ros::Publisher handle_robot_ForceLog;
+  ros::Publisher handle_robot_RRICartState;
+  ros::Publisher handle_robot_RRIJointState;
   ros::ServiceServer handle_robot_Ping;
   ros::ServiceServer handle_robot_SetCartesian;
   ros::ServiceServer handle_robot_SetCartesianJ;
@@ -248,6 +262,7 @@ class RobotController
   ros::ServiceServer handle_robot_SetInertia;
   ros::ServiceServer handle_robot_SetWorkObject;
   ros::ServiceServer handle_robot_SetSpeed;
+  ros::ServiceServer handle_robot_SetAcc;
   ros::ServiceServer handle_robot_GetState;
   ros::ServiceServer handle_robot_SetZone;
   ros::ServiceServer handle_robot_SetTrackDist;
@@ -283,6 +298,7 @@ class RobotController
   bool specialCommand(int command, double param1=0, double param2=0, double param3=0, double param4=0, double param5=0);
   bool setVacuum(int v);
   bool setSpeed(double tcp, double ori);
+  bool setAcc(double acc, double deacc);
   bool setZone(int z);
   bool stop_nb();
   bool setComm(int mode);
@@ -311,4 +327,7 @@ class RobotController
   Quaternion curQ;
   double curJ[NUM_JOINTS];
   double curForce[NUM_FORCES];
+  
+  // XML parser for rri
+  TiXmlDocument xmldoc;  
 };
