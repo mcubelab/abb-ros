@@ -1,8 +1,0 @@
-SOLVED 2010-12-01 Small wait after stop command and previous to send the ack message to be sure that the robot is stopped.
-SOLVED 2010-12-06 Stop Command makes the socket connection to drop sometimes.
-SOLVED 2010-12-06 Server crashes when the string is larger than 80 bytes, because the remaining ends up in the subsequent string, and the string parser in RAPID tries to look for something that does not exist. Handle those situations.
-SOLVED 2011-02-01 Specify the workobject, tool, speed and zone when we begin to move the robot.
-2011-04-20 Add vibration.
-SOLVED 2011-06-09 Move non-blocking to ROS.
-SOLVED 2011-06-09 Change Time/Day in the controller.
-SOLVED 2011-11-22 Automatic detection and recovery of collisions, though motion supervision.

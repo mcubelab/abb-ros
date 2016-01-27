@@ -1,4 +1,0 @@
-int64 tsleep
-geometry_msgs/Pose setup_pose
-float64 throw_speed
-float64 grasp_speed

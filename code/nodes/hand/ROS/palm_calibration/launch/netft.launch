@@ -1,9 +1,0 @@
-<!-- -*- mode: xml; -*- -->
-<!-- launch the force sensor node for ATI mini-40 Net F/T box -->
-<!-- see http://www.ros.org/wiki/roslaunch/XML/node -->
-
-<launch>
-  <!-- start the Net F/T driver node -->
-  <node name="netft_node"     type="netft_node"    pkg="netft_rdt_driver" output="screen" args="--address 192.168.1.100" />
-</launch>
-

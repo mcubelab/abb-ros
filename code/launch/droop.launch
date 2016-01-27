@@ -1,9 +1,0 @@
-<launch>
-
-	<include file="$(find launch)/system.launch" />
-	<include file="$(find launch)/tableVisionRemote.launch" />
-
-	<node pkg="robotiq_c_model_control" name="robotiq" type="CModelTcpNode.py" output="screen" args="192.168.1.86" />
-
-
-</launch>

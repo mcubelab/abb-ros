@@ -1,8 +1,0 @@
-# Service to load a grasp learning model
-string modelName  # Name of the model to use (without any extension).
-float64[] mins    # The minimum bounds for our parameters
-float64[] maxs    # The maximum bounds for our parameters
-int64 grid          # The number of divisions in each dimension
----
-int64 ret
-string msg

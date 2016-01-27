@@ -1,6 +1,0 @@
-# Service to Set Container in Display node
-int64 line 
-string s
----
-int64 ret
-string msg

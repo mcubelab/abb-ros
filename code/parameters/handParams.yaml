@@ -1,6 +1,0 @@
-hand: {arduinoSerialBaud: 115200, arduinoSerialId: /dev/ttyUSB0, 
-        motorForce: 0.5, motorSpeed: 0.5, 
-        stepsPerDegreeFingers: 11.378, stepsPerDegreeMotor: -129.35, #-133.8, #368 for old hand P-3 with new fingers, #317.35,
-
-        zeroMotorPos: -350, #200,
-        encMotorAtZeroAngle: -350} #-6000 for old hand P-3 with new fingers} #-5078}

@@ -1,5 +1,0 @@
-# Service to Set the Max Current of the hand
-float64 force # value from 0 to 1
----
-int64 ret     # Set to 1 (success) or 0 (error)
-string msg    # Error description

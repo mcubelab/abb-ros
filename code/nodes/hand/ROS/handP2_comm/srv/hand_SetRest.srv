@@ -1,4 +1,0 @@
-#Service to set the hand to rest
----
-int64 ret     # Set to 1 (success) or 0 (error)
-string msg    # Error description

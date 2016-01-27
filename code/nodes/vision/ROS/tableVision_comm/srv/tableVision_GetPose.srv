@@ -1,9 +1,0 @@
-# Given that we're looking for a certain object, it returns it's pose
-
-int64 objNum
----
-string filename
-geometry_msgs/PoseStamped result
-
-int64 ret
-string msg

@@ -1,7 +1,0 @@
-# Service to Get the pose of the hand
-# Number of fingers defined in hand_comm.h
----
-int64 encMotor      # Motor encoder
-int64[] encFinger   # finger encoders
-int64 ret           # Set to 1 (success) or 0 (error)
-string msg          # Error description

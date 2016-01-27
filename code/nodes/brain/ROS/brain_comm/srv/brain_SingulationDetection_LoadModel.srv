@@ -1,5 +1,0 @@
-# Service to load a sigulation detection model
-string modelName           #Name of the model to load (without any extension).
----
-int64 ret
-string msg

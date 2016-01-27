@@ -1,8 +1,0 @@
-# Service to send a variable to MATLAB through the Matlab engine
-string name       # Name of the variable to recover. It should be an array.
----
-int64 ncols       # Recovered number of columns of the array.
-int64 nrows       # Recovered number of rows of the array.
-float64[] data    # Data recovered
-int64 ret         # Set to 1 (success) or 0 (error)
-string msg        # Error description
