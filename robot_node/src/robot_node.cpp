@@ -54,7 +54,7 @@ RobotController::~RobotController() {
   char message[MAX_BUFFER];
   
   //Close RRI connections
-  if(this->RRIConnected) {
+  if(RRIConnected) {
     strcpy(message, ABBInterpreter::closeRRI().c_str());
     send(robotMotionSocket, message, strlen(message), 0);
   }
@@ -88,24 +88,28 @@ bool RobotController::init(std::string id)
   
   node->getParam(robotname_sl + "/robotIp",robotIp);
   node->getParam(robotname_sl + "/robotMotionPort",robotMotionPort);
-  bool useRRI = false;
+  bool useRRI;
   node->param<bool>(robotname_sl + "/useRRI", useRRI, false);
+  bool useLogger;
+  node->param<bool>(robotname_sl + "/useLogger", useLogger, false);
   
   connectMotionServer(robotIp.c_str(), robotMotionPort);
   if(!motionConnected)
   {
     return false; 
   }
-
-  //Connect to Robot Logger server
-  ROS_INFO("ROBOT_CONTROLLER: Connecting to the ABB logger server...");
-  node->getParam(robotname_sl + "/robotLoggerPort",robotLoggerPort);
-  connectLoggerServer(robotIp.c_str(), robotLoggerPort);
-  if(!loggerConnected)
-  {
+  
+  if (useLogger) {
+    //Connect to Robot Logger server
+    ROS_INFO("ROBOT_CONTROLLER: Connecting to the ABB logger server...");
+    node->getParam(robotname_sl + "/robotLoggerPort",robotLoggerPort);
+    connectLoggerServer(robotIp.c_str(), robotLoggerPort);
+    if(!loggerConnected)
+    {
     ROS_INFO("ROBOT_CONTROLLER: Not able to connect to logger server. "
         "Continuing without robot feedback.");
-  }
+    }
+  } 
 
 
   
@@ -2731,11 +2735,15 @@ int main(int argc, char** argv)
   pthread_mutex_init(&forceUpdateMutex, NULL);
   pthread_mutex_init(&sendRecvMutex, NULL);
 
+  bool useLogger;
+  node.param<bool>(ABBrobot.robotname_sl + "/useLogger", useLogger, true);
+
   // Create a dedicated thread for logger broadcasts
   pthread_t loggerThread;
   pthread_attr_t attrL;
   pthread_attr_init(&attrL);
   pthread_attr_setdetachstate(&attrL, PTHREAD_CREATE_JOINABLE);
+
 
   if (pthread_create(&loggerThread, &attrL, 
         loggerMain, (void*)&ABBrobot) != 0)
@@ -2746,15 +2754,15 @@ int main(int argc, char** argv)
   
   
   
-  bool useRRI = false;
+  bool useRRI;
   node.param<bool>(ABBrobot.robotname_sl + "/useRRI", useRRI, false);
+  
+  // Create a dedicated thread for rri broadcasts
+  pthread_t rriThread;
+  pthread_attr_t attrR;
+  pthread_attr_init(&attrR);
+  pthread_attr_setdetachstate(&attrR, PTHREAD_CREATE_JOINABLE);
   if (useRRI){
-    // Create a dedicated thread for rri broadcasts
-    pthread_t rriThread;
-    pthread_attr_t attrR;
-    pthread_attr_init(&attrR);
-    pthread_attr_setdetachstate(&attrR, PTHREAD_CREATE_JOINABLE);
-
     if (pthread_create(&rriThread, &attrR, 
         rriMain, (void*)&ABBrobot) != 0)
     {
@@ -2793,15 +2801,17 @@ int main(int argc, char** argv)
   ROS_INFO("ROBOT_CONTROLLER: Shutting down node /robot_controller...");
 
   //End threads
-  void *statusL, *statusB;
-  pthread_attr_destroy(&attrL);
+  void *statusL, *statusB, *statusR;
+  if(useLogger) pthread_attr_destroy(&attrL);
+  if(useRRI) pthread_attr_destroy(&attrR);
   pthread_attr_destroy(&attrB);
   pthread_mutex_destroy(&nonBlockMutex);
   pthread_mutex_destroy(&jointUpdateMutex);
   pthread_mutex_destroy(&cartUpdateMutex);
   pthread_mutex_destroy(&forceUpdateMutex);
   pthread_mutex_destroy(&sendRecvMutex);
-  pthread_join(loggerThread, &statusL);
+  if(useLogger) pthread_join(loggerThread, &statusL);
+  if(useRRI) pthread_join(rriThread, &statusR);
   pthread_join(nonBlockThread, &statusB);
 
   ROS_INFO("ROBOT_CONTROLLER: Done.");
