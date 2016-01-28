@@ -91,7 +91,7 @@ bool RobotController::init(std::string id)
   bool useRRI;
   node->param<bool>(robotname_sl + "/useRRI", useRRI, false);
   bool useLogger;
-  node->param<bool>(robotname_sl + "/useLogger", useLogger, false);
+  node->param<bool>(robotname_sl + "/useLogger", useLogger, true);
   
   connectMotionServer(robotIp.c_str(), robotMotionPort);
   if(!motionConnected)
