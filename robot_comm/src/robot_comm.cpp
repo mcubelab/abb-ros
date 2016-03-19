@@ -48,10 +48,6 @@ void RobotComm::subscribe(ros::NodeHandle* np)
     np->serviceClient<robot_comm::robot_GetState>(robotname + "_GetState");
   handle_robot_SetTrackDist = 
     np->serviceClient<robot_comm::robot_SetTrackDist>(robotname + "_SetTrackDist");
-  handle_robot_SpecialCommand = 
-    np->serviceClient<robot_comm::robot_SpecialCommand>(robotname + "_SpecialCommand");
-  handle_robot_SetVacuum = 
-    np->serviceClient<robot_comm::robot_SetVacuum>(robotname + "_SetVacuum");
   handle_robot_Stop = 
     np->serviceClient<robot_comm::robot_Stop>(robotname + "_Stop");
   handle_robot_IsMoving = 
@@ -102,8 +98,6 @@ void RobotComm::shutdown()
   handle_robot_SetAcc.shutdown();
   handle_robot_GetState.shutdown();
   handle_robot_SetTrackDist.shutdown();
-  handle_robot_SpecialCommand.shutdown();
-  handle_robot_SetVacuum.shutdown();
   handle_robot_Stop.shutdown();
   handle_robot_IsMoving.shutdown();
   handle_robot_SetDefaults.shutdown();
@@ -295,23 +289,6 @@ bool RobotComm::IsMoving()
   }
   else
     return false;
-}
-
-bool RobotComm::SpecialCommand(int command, double param1, double param2, double param3, double param4, double param5)
-{
-  robot_SpecialCommand_srv.request.command = command;
-  robot_SpecialCommand_srv.request.param1 = param1;
-  robot_SpecialCommand_srv.request.param2 = param2;
-  robot_SpecialCommand_srv.request.param3 = param3;
-  robot_SpecialCommand_srv.request.param4 = param4;
-  robot_SpecialCommand_srv.request.param5 = param5;
-  return handle_robot_SpecialCommand.call(robot_SpecialCommand_srv);
-}
-
-bool RobotComm::SetVacuum(const int mode)
-{
-  robot_SetVacuum_srv.request.vacuum = mode;
-  return handle_robot_SetVacuum.call(robot_SetVacuum_srv);
 }
 
 bool RobotComm::GetSpeed(double &tcp, double &ori)
@@ -641,13 +618,6 @@ bool RobotComm::relativeMoveArm(double x_off, double y_off, double z_off,
 bool RobotComm::invertHand(void)
 {
   RobotComm::SetJoints(0.0,0.0,0.0,0.0,-90.0,0.0);
-
-  return true;
-}
-
-bool RobotComm::vibrate(void)
-{
-  RobotComm::SpecialCommand(4.0,0.5,0.0,0.0,0.0,0.0);
 
   return true;
 }

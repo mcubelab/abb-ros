@@ -377,40 +377,6 @@ string ABBInterpreter::setAcc(double acc, double deacc, int idCode)
   return (msg);
 }
 
-
-/*
-  * Deprecated: Formats message to set the zone mode of the ABB robot (distance from where to interpolate to the next destination).
-    Possible modes:
-    ---------------
-    Mode - Name in RAPID - Linear  - Orientation
-    0          fine         0 mm        0°
-    1          z0           0.3 mm      0.03°  <- Default and recommended value.
-    2          z1           1 mm        0.1°
-    3          z5           5 mm        0.8°
-    4          z10         10 mm        1.5°
-  * @param mode Mode to chose between 0-4.
-  * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
-  * @return String to be sent to ABB server.
-  
-string ABBInterpreter::setZone(int mode,int idCode)
-{
-  switch (mode)
-    {
-    case 0:
-      return(ABBInterpreter::setZoneManual(0, 0.0, 0.0, idCode));
-    case 1:
-      return(ABBInterpreter::setZoneManual(1, 0.3, 0.03, idCode));
-    case 2:
-      return(ABBInterpreter::setZoneManual(1, 1.0, 0.10, idCode));
-    case 3:
-      return(ABBInterpreter::setZoneManual(1, 5.0, 0.80, idCode));
-    case 4:
-      return(ABBInterpreter::setZoneManual(1, 10.0, 1.50, idCode));
-    default:
-      return(ABBInterpreter::setZoneManual(0, 0.0, 0.0, idCode));
-    }
-    }*/
-
 /**
   * Formats message to set the zone mode of the ABB robot (distance from where to interpolate to the next destination).
   * @param fine Motion mode: 1 - Stop point. 0 - Fly by point.
@@ -440,26 +406,6 @@ string ABBInterpreter::setZone(bool fine, double tcp_mm, double ori_mm, double o
 
   return (msg);
 }
-
-/* Here lies the setBuffer code for position of end effector - Dont need it for joint control
-string ABBInterpreter::setBuffer(PosList poslist) //Need help on this one, dont really understand it
-{
-	// pos ---  vector<double>
-	// #include <vector>
-	// typedef std::vector<double> Pos;
-	// typedef std::vector<Pos> PosList;
-	//
-	// poslist[i][j]
-	
-	for (int i=1, i<sizeof(poslist), i++)
-	{
-		msg += addJointPosBuffer(poslist[i][1], poslist[i][2], poslist[i][3],
-						         poslist[i][4], poslist[i][5], poslist[i][6]);
-	}
-	    
-	
-}
-*/
 
 string ABBInterpreter::addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode)
 {
@@ -549,18 +495,6 @@ string ABBInterpreter::clearJointPosBuffer(int idCode)
 	
 }
 
-/*
-string ABBInterpreter::lenJointPosBuffer(int idCode)
-{
-	string msg("39 ");
-	sprintf(buff,"%.3d ",idCode); //identification code
-    msg += buff;
-	msg += "#";
-	return (msg);
-	
-}
-*/
-
 string ABBInterpreter::executeJointPosBuffer(int idCode)
 {
 	char buff[20];
@@ -594,60 +528,73 @@ string ABBInterpreter::closeRRI(int idCode)
 
 
 /**
-  * Formats message to call special command.
-  * @param command Number identifying the special command.
-  * @param param1 General purpose parameter 1.
-  * @param param2 General purpose parameter 2.
-  * @param param3 General purpose parameter 3.
-  * @param param4 General purpose parameter 4.
-  * @param param5 General purpose parameter 5.
+  * Formats message to define the coordinates of the work object reference frame.
+  * @param refFrame The coordinate system the soft direction is related to.
+  *                 CSS_REFFRAME_TOOL: 1 Softness direction will be in relation to current tool.
+                    CSS_REFFRAME_WOBJ: 2 Softness direction will be in relation to current work object.
+  * @param refOrient This argument gives the possibility to rotate the coordinate system described by RefFrame.
+  * @param softDir  The Cartesian direction in which the robot will be soft. Soft direction is in relation
+  *                 to RefFrame.
+  *                 CSS_X := 1;
+                    CSS_Y := 2;
+                    CSS_Z := 3;
+                    CSS_XY := 4;
+                    CSS_XZ := 5;
+                    CSS_YZ := 6;
+                    CSS_XYZ := 7;
+                    CSS_XYRZ := 8;
+  * @param stiffness This argument describes how strongly the robot tries to move back to the reference
+  *                  point when it is pushed away from that point. It is a percentage of a configured
+  *                  value where 0 gives no spring effect of going back to the reference point.
+  * @param stiffnessNonSoftDir This argument sets the softness for all directions that are not defined as soft by the argument SoftDir.
+  * @param allowMove When this switch is used movement instructions will be allowed during the activated 
+  *                  soft mode. Note that using \AllowMove will internally increase the value of the 
+  *                  stiffness parameter.
+  * @param ramp This argument defines how fast the softness is implemented, as a percentage of 
+  *             the value set by the system parameter Activation smoothness time. Can be set to
+  *             between 1 and 500%.
   * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
   * @return String to be sent to ABB server.
   */
-string ABBInterpreter::specialCommand(int command, double param1, double param2, double param3, double param4, double param5, int idCode)
-{
-  char buff[20];
-  string msg("10 ");//instruction code;
   
-  sprintf(buff,"%.3d ",idCode); //identification code
-  msg += buff;
-  sprintf(buff,"%.1d ",command);
-  msg += buff ;
-  sprintf(buff,"%+09.2lf ", param1);
-  msg += buff ;
-  sprintf(buff,"%+09.2lf ", param2);
-  msg += buff ;
-  sprintf(buff,"%+09.2lf ", param3);
-  msg += buff ;
-  sprintf(buff,"%+09.2lf ", param4);
-  msg += buff ;
-  sprintf(buff,"%+09.2lf ", param5);
-  msg += buff ;
-  msg += "#";
+string ABBInterpreter::actCSS(int refFrame, double refOrient_q0, double refOrient_qx, double refOrient_qy, double refOrient_qz, 
+                              int softDir, double stiffness, double stiffnessNonSoftDir, int allowMove, double ramp,
+                              int idCode)
+{
+  stringstream ss;
+  ss << "60 " //instruction code;
+     << idCode << " "
+     << setprecision(13) << refFrame << " " 
+     << refOrient_q0 << " " << refOrient_qx << " " << refOrient_qy << " " << refOrient_qz << " "
+     << softDir << " " << stiffness << " " << stiffnessNonSoftDir << " " << allowMove << " " 
+     << ramp << "#";
 
-  return (msg);
+  return ss.str();
 }
 
 /**
-  * Formats message to set the vacuum on/off.
-  * @param vacuum 1-on 0-off.
+  * Formats message to set the cartesian coordinates of the ABB robot during deactCSS.
+  * The coordinates are always with respect to the currently defined work object and tool.
+  * @param x X-coordinate of the robot.
+  * @param y Y-coordinate of the robot.
+  * @param z Z-coordinate of the robot.
+  * @param q0 First component of the orientation quaternion.
+  * @param qx Second component of the orientation quaternion.
+  * @param qy Third component of the orientation quaternion.
+  * @param qz Fourth component of the orientation quaternion.
   * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
   * @return String to be sent to ABB server.
   */
-string ABBInterpreter::setVacuum(int vacuum, int idCode)
-{
-  char buff[20];
-  string msg("11 ");//instruction code;
   
-  sprintf(buff,"%.3d ",idCode); //identification code
-  msg += buff;
-  sprintf(buff,"%.2d ",vacuum);
-  msg += buff ;
-  msg += "#";
+string ABBInterpreter::deactCSS(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode)
+{
+  stringstream ss;
+  ss << "61 " //instruction code;
+     << idCode << " "
+     << setprecision(13) << q0 << " " << qx << " " << qy << " " << qz << "#";
 
-  return (msg);
+  return ss.str();
 }
-
 
 /**
   * Formats message to close the connection with the server in the ABB robot.

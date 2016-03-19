@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include "math.h"
 #include <cstdio>
 #include <vector>
+
 
 using namespace std;
 
@@ -28,25 +31,25 @@ namespace ABBInterpreter
   string setWorkObject(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
   string setSpeed(double tcp, double ori, int idCode=0);
   string setAcc(double acc, double deacc, int idCode=0);
-  //string setZone(int mode=1,int idCode=0);
   string setZone(bool fine=0, double tcp_mm = 5.0, double ori_mm = 5.0, double ori_deg = 1.0, int idCode=0);
-  string specialCommand(int command, double param1, double param2, double param3, double param4, double param5, int idCode=0);
-  string setVacuum(int vacuum=0, int idCode=0);
   string closeConnection(int idCode=0);
   // Buffers
   // TCP Pose
-  string addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode);
-  string clearBuffer(int idCode);
-  string executeBuffer(int idCode);
-  string lenBuffer(int idCode);
+  string addBuffer(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
+  string clearBuffer(int idCode=0);
+  string executeBuffer(int idCode=0);
+  string lenBuffer(int idCode=0);
   // Joint Configuration
-  string addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode);
-  string clearJointPosBuffer(int idCode);
-  string executeJointPosBuffer(int idCode);
+  string addJointPosBuffer(double q1, double q2, double q3, double q4, double q5, double q6, int idCode=0);
+  string clearJointPosBuffer(int idCode=0);
+  string executeJointPosBuffer(int idCode=0);
   // RRI
-  string connectRRI(int idCode);
+  string connectRRI(int idCode=0);
   string closeRRI(int idCode=0);
-  
+  // CSS
+  string actCSS(int refFrame, double refOrient_q0, double refOrient_qx, double refOrient_qy, double refOrient_qz, 
+                int softDir, double stiffness, double stiffnessNonSoftDir, int allowMove, double ramp, int idCode=0);
+  string deactCSS(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
   
   int parseCartesian(string msg, double *x, double *y, double *z,
       double *q0, double *qx, double *qy, double *qz);

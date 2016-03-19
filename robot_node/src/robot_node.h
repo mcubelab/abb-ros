@@ -20,6 +20,7 @@
 #include <ros/ros.h>
 #include <robot_comm/robot_comm.h>
 #include <sensor_msgs/JointState.h>
+#include <geometry_msgs/Pose.h>
 
 //#define MAX_BUFFER 256
 #define MAX_BUFFER 10000
@@ -57,6 +58,8 @@ pthread_mutex_t cartUpdateMutex;
 pthread_mutex_t forceUpdateMutex;
 pthread_mutex_t sendRecvMutex;
 
+#define SERVICE_CALLBACK_DEC(X) bool robot_##X(robot_comm::robot_##X::Request& req, robot_comm::robot_##X::Response& res);
+
 class RobotController
 {
  public:
@@ -69,96 +72,40 @@ class RobotController
   string robotname_sl;
 
   // Service Callbacks
-  bool robot_Ping(
-      robot_comm::robot_Ping::Request& req, 
-      robot_comm::robot_Ping::Response& res);
-  bool robot_SetDefaults(
-      robot_comm::robot_SetDefaults::Request& req, 
-      robot_comm::robot_SetDefaults::Response& res);
-  bool robot_SetCartesianJ(
-      robot_comm::robot_SetCartesianJ::Request& req, 
-      robot_comm::robot_SetCartesianJ::Response& res);
-  bool robot_SetCartesian(
-      robot_comm::robot_SetCartesian::Request& req, 
-      robot_comm::robot_SetCartesian::Response& res);
-  bool robot_GetCartesian(
-      robot_comm::robot_GetCartesian::Request& req, 
-      robot_comm::robot_GetCartesian::Response& res);
-  bool robot_SetJoints(
-      robot_comm::robot_SetJoints::Request& req, 
-      robot_comm::robot_SetJoints::Response& res);
-  bool robot_GetJoints(
-      robot_comm::robot_GetJoints::Request& req, 
-      robot_comm::robot_GetJoints::Response& res);
-  bool robot_GetIK(
-      robot_comm::robot_GetIK::Request& req, 
-      robot_comm::robot_GetIK::Response& res);
-  bool robot_GetFK(
-      robot_comm::robot_GetFK::Request& req, 
-      robot_comm::robot_GetFK::Response& res);
-  bool robot_Stop(
-      robot_comm::robot_Stop::Request& req, 
-      robot_comm::robot_Stop::Response& res);
-  bool robot_SetTool(
-      robot_comm::robot_SetTool::Request& req, 
-      robot_comm::robot_SetTool::Response& res);
-  bool robot_SetInertia(
-      robot_comm::robot_SetInertia::Request& req, 
-      robot_comm::robot_SetInertia::Response& res);
-  bool robot_SetWorkObject(
-      robot_comm::robot_SetWorkObject::Request& req, 
-      robot_comm::robot_SetWorkObject::Response& res);
-  bool robot_SetComm(
-      robot_comm::robot_SetComm::Request& req, 
-      robot_comm::robot_SetComm::Response& res);
-  bool robot_SpecialCommand(
-      robot_comm::robot_SpecialCommand::Request& req,
-      robot_comm::robot_SpecialCommand::Response& res);
-  bool robot_SetVacuum(
-      robot_comm::robot_SetVacuum::Request& req, 
-      robot_comm::robot_SetVacuum::Response& res);
-  bool robot_GetState(
-      robot_comm::robot_GetState::Request& req, 
-      robot_comm::robot_GetState::Response& res);
-  bool robot_SetSpeed(
-      robot_comm::robot_SetSpeed::Request& req, 
-      robot_comm::robot_SetSpeed::Response& res);
-  bool robot_SetAcc(
-      robot_comm::robot_SetAcc::Request& req, 
-      robot_comm::robot_SetAcc::Response& res);
-  bool robot_SetZone(
-      robot_comm::robot_SetZone::Request& req, 
-      robot_comm::robot_SetZone::Response& res);
-  bool robot_SetTrackDist(
-      robot_comm::robot_SetTrackDist::Request& req, 
-      robot_comm::robot_SetTrackDist::Response& res);
-  bool robot_IsMoving(
-      robot_comm::robot_IsMoving::Request& req, 
-      robot_comm::robot_IsMoving::Response& res);
-  bool robot_Approach(
-      robot_comm::robot_Approach::Request& req,
-      robot_comm::robot_Approach::Response& res);
+  SERVICE_CALLBACK_DEC(Ping)
+  SERVICE_CALLBACK_DEC(SetDefaults)
+  SERVICE_CALLBACK_DEC(SetCartesianJ)
+  SERVICE_CALLBACK_DEC(SetCartesian)
+  SERVICE_CALLBACK_DEC(GetCartesian)
+  SERVICE_CALLBACK_DEC(SetJoints)
+  SERVICE_CALLBACK_DEC(GetJoints)
+  SERVICE_CALLBACK_DEC(GetIK)
+  SERVICE_CALLBACK_DEC(GetFK)
+  SERVICE_CALLBACK_DEC(Stop)
+  SERVICE_CALLBACK_DEC(SetTool)
+  SERVICE_CALLBACK_DEC(SetInertia)
+  SERVICE_CALLBACK_DEC(SetWorkObject)
+  SERVICE_CALLBACK_DEC(SetComm)
+  SERVICE_CALLBACK_DEC(GetState)
+  SERVICE_CALLBACK_DEC(SetSpeed)
+  SERVICE_CALLBACK_DEC(SetAcc)
+  SERVICE_CALLBACK_DEC(SetZone)
+  SERVICE_CALLBACK_DEC(SetTrackDist)
+  SERVICE_CALLBACK_DEC(IsMoving)
+  SERVICE_CALLBACK_DEC(Approach)
+  
   // Buffer (joints) Comm declerations:
-  bool robot_AddJointPosBuffer(
-	  robot_comm::robot_AddJointPosBuffer::Request& req,
-	  robot_comm::robot_AddJointPosBuffer::Response& res);
-  bool robot_ExecuteJointPosBuffer(
-	  robot_comm::robot_ExecuteJointPosBuffer::Request& req,
-	  robot_comm::robot_ExecuteJointPosBuffer::Response& res);
-  bool robot_ClearJointPosBuffer(
-	  robot_comm::robot_ClearJointPosBuffer::Request& req,
-	  robot_comm::robot_ClearJointPosBuffer::Response& res);
+  SERVICE_CALLBACK_DEC(AddJointPosBuffer)
+  SERVICE_CALLBACK_DEC(ExecuteJointPosBuffer)
+  SERVICE_CALLBACK_DEC(ClearJointPosBuffer)
+  
     // Buffer (TCP)
-  bool robot_AddBuffer(
-	  robot_comm::robot_AddBuffer::Request& req,
-	  robot_comm::robot_AddBuffer::Response& res);
-  bool robot_ExecuteBuffer(
-	  robot_comm::robot_ExecuteBuffer::Request& req,
-	  robot_comm::robot_ExecuteBuffer::Response& res);
-  bool robot_ClearBuffer(
-	  robot_comm::robot_ClearBuffer::Request& req,
-	  robot_comm::robot_ClearBuffer::Response& res);
-	  
+  SERVICE_CALLBACK_DEC(AddBuffer)
+  SERVICE_CALLBACK_DEC(ExecuteBuffer)
+  SERVICE_CALLBACK_DEC(ClearBuffer)
+	  //CSS
+  SERVICE_CALLBACK_DEC(ActivateCSS)
+  SERVICE_CALLBACK_DEC(DeactivateCSS)
 
   // Advertise Services and Topics
   void advertiseServices();
@@ -219,6 +166,7 @@ class RobotController
   bool executeBuffer();
   bool clearBuffer();
 
+
   // Functions that compute our distance from the current position to the goal
   double posDistFromGoal();
   double orientDistFromGoal();
@@ -266,9 +214,7 @@ class RobotController
   ros::ServiceServer handle_robot_GetState;
   ros::ServiceServer handle_robot_SetZone;
   ros::ServiceServer handle_robot_SetTrackDist;
-  ros::ServiceServer handle_robot_SpecialCommand;
   ros::ServiceServer handle_robot_SetComm;
-  ros::ServiceServer handle_robot_SetVacuum;
   ros::ServiceServer handle_robot_IsMoving;
   ros::ServiceServer handle_robot_SetDefaults;
   ros::ServiceServer handle_robot_Approach;
@@ -278,6 +224,8 @@ class RobotController
   ros::ServiceServer handle_robot_AddBuffer;
   ros::ServiceServer handle_robot_ExecuteBuffer;
   ros::ServiceServer handle_robot_ClearBuffer;
+  ros::ServiceServer handle_robot_ActivateCSS;
+  ros::ServiceServer handle_robot_DeactivateCSS;
  
   // Helper function for communicating with robot server
   bool sendAndReceive(char *message, int messageLength, 
@@ -295,13 +243,14 @@ class RobotController
     double cgz, double ix, double iy, double iz);
   bool setWorkObject(double x, double y, double z, 
     double q0, double qx, double qy, double qz);
-  bool specialCommand(int command, double param1=0, double param2=0, double param3=0, double param4=0, double param5=0);
-  bool setVacuum(int v);
   bool setSpeed(double tcp, double ori);
   bool setAcc(double acc, double deacc);
   bool setZone(int z);
   bool stop_nb();
   bool setComm(int mode);
+  // CSS
+  bool actCSS(robot_comm::robot_ActivateCSS::Request& req);
+  bool deactCSS(geometry_msgs::Pose pose);
   
   // Check if robot is currently moving or not
   bool is_moving();
@@ -312,7 +261,6 @@ class RobotController
 
   // Robot State
   double curSpd[2];
-  int curVacuum;
   int curZone;
   Vec curToolP;
   Quaternion curToolQ;

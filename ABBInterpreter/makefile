@@ -16,7 +16,7 @@ LBITS := $(shell getconf LONG_BIT)
 
 .PHONY: clean
 
-all: $(LIB) include clean 
+all: $(LIB) clean 
 
 $(LIB): $(OBJ)
 	mkdir -p lib
@@ -24,11 +24,8 @@ $(LIB): $(OBJ)
 
 #libraries
 
-$(OBJ): src/ABBInterpreter.h
-	$(CXX) $(CPPFLAGS) -c -o $(OBJ) src/ABBInterpreter.cpp	
-
-include: $(LIB)
-	cp src/ABBInterpreter.h include/ABBInterpreter.h
+$(OBJ): include/ABBInterpreter.h
+	$(CXX) $(CPPFLAGS) -c -o $(OBJ) src/ABBInterpreter.cpp -Iinclude	
 
 clean:
 	rm -rf $(OBJ) doc/html

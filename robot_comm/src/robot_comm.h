@@ -19,8 +19,6 @@
 #include <robot_comm/robot_SetSpeed.h>
 #include <robot_comm/robot_SetAcc.h>
 #include <robot_comm/robot_GetState.h>
-#include <robot_comm/robot_SetVacuum.h>
-#include <robot_comm/robot_SpecialCommand.h>
 #include <robot_comm/robot_Stop.h>
 #include <robot_comm/robot_SetTrackDist.h>
 #include <robot_comm/robot_IsMoving.h>
@@ -39,6 +37,10 @@
 #include <robot_comm/robot_JointsLog.h>
 #include <robot_comm/robot_ForceLog.h>
 
+
+#include <robot_comm/robot_ActivateCSS.h>
+#include <robot_comm/robot_DeactivateCSS.h>
+
 #include <geometry_msgs/Pose.h>
 
 #define NUM_JOINTS 6
@@ -47,8 +49,6 @@
 #define BLOCKING 1
 #define NON_BLOCKING 0
 
-#define VACUUM_OPEN 0
-#define VACUUM_CLOSE 1
 
 typedef enum
 {
@@ -134,8 +134,6 @@ class RobotComm
     bool GetState(double &tcp, double &ori, int &zone, double workObject[7], double tool[7], double inertia[7]);
     bool SetTrackDist(const double pos_dist, const double ang_dist);
     bool Stop();
-    bool SetVacuum(const int mode);
-    bool SpecialCommand(int command, double param1=0, double param2=0, double param3=0, double param4=0, double param5=0);
     bool GetCartesian(double cart[7]);
     bool GetCartesian(double trans[3], double quat[4]);
     bool GetCartesian(Vec &trans, Quaternion &quat);
@@ -195,8 +193,6 @@ class RobotComm
     ros::ServiceClient handle_robot_SetAcc;
     ros::ServiceClient handle_robot_GetState;
     ros::ServiceClient handle_robot_SetTrackDist;
-    ros::ServiceClient handle_robot_SpecialCommand;
-    ros::ServiceClient handle_robot_SetVacuum;
     ros::ServiceClient handle_robot_Stop;
     ros::ServiceClient handle_robot_IsMoving;
     ros::ServiceClient handle_robot_SetDefaults;
@@ -227,8 +223,6 @@ class RobotComm
     robot_comm::robot_GetState robot_GetState_srv;
     robot_comm::robot_SetAcc robot_SetAcc_srv;
     robot_comm::robot_SetTrackDist robot_SetTrackDist_srv;
-    robot_comm::robot_SpecialCommand robot_SpecialCommand_srv;
-    robot_comm::robot_SetVacuum robot_SetVacuum_srv;
     robot_comm::robot_Stop robot_Stop_srv;
     robot_comm::robot_IsMoving robot_IsMoving_srv;
     robot_comm::robot_SetDefaults robot_SetDefaults_srv;
