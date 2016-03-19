@@ -889,7 +889,7 @@ SERVICE_CALLBACK_DEF(AddJointPosBuffer)
 
 SERVICE_CALLBACK_DEF(ExecuteJointPosBuffer)
 {
-  return RUN_AND_RETURN_RESULT(executeBuffer(), res.ret, res.msg, "Not able to execute buffered joint trajectories ");
+  return RUN_AND_RETURN_RESULT(executeJointPosBuffer(), res.ret, res.msg, "Not able to execute buffered joint trajectories ");
       
 }
 SERVICE_CALLBACK_DEF(ClearJointPosBuffer)
