@@ -567,7 +567,7 @@ string ABBInterpreter::actCSS(int refFrame, double refOrient_q0, double refOrien
      << setprecision(13) << refFrame << " " 
      << refOrient_q0 << " " << refOrient_qx << " " << refOrient_qy << " " << refOrient_qz << " "
      << softDir << " " << stiffness << " " << stiffnessNonSoftDir << " " << allowMove << " " 
-     << ramp << "#";
+     << ramp << " #";
 
   return ss.str();
 }
@@ -591,7 +591,7 @@ string ABBInterpreter::deactCSS(double x, double y, double z, double q0, double 
   stringstream ss;
   ss << "61 " //instruction code;
      << idCode << " "
-     << setprecision(13) << q0 << " " << qx << " " << qy << " " << qz << "#";
+     << setprecision(13) << x << " " << y << " " << z << " " << q0 << " " << qx << " " << qy << " " << qz << " #";
 
   return ss.str();
 }

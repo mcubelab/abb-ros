@@ -277,13 +277,13 @@ void RobotController::advertiseServices()
 
 // helper function
 template<typename T1, typename T>
-void setArrayFromScalars(T1 a, T x0,T x1,T x2,T x3,T x4,T x5){  a[0] = x0;   a[1] = x1;  a[2] = x2;  a[3] = x3;  a[4] = x4;  a[5] = x5; }
+void setArrayFromScalars(T1& a, T x0,T x1,T x2,T x3,T x4,T x5){  a[0] = x0;   a[1] = x1;  a[2] = x2;  a[3] = x3;  a[4] = x4;  a[5] = x5; }
 template<typename T1, typename T>
-void setArrayFromScalars(T1 a, T x0,T x1,T x2,T x3){  a[0] = x0;  a[1] = x1;  a[2] = x2; a[3] = x3; }
+void setArrayFromScalars(T1& a, T x0,T x1,T x2,T x3){  a[0] = x0;  a[1] = x1;  a[2] = x2; a[3] = x3; }
 template<typename T1, typename T>
-void setArrayFromScalars(T1 a, T x0,T x1,T x2){  a[0] = x0;  a[1] = x1;  a[2] = x2; }
+void setArrayFromScalars(T1& a, T x0,T x1,T x2){  a[0] = x0;  a[1] = x1;  a[2] = x2; }
 template<typename T1, typename T>
-void setArrayFromScalars(T1 a, T x0,T x1){ a[0] = x0;  a[1] = x1; }
+void setArrayFromScalars(T1& a, T x0,T x1){ a[0] = x0;  a[1] = x1; }
 
 template<typename T1, typename T>
 void setScalarsFromArray(T& x0,T& x1,T& x2,T& x3,T& x4,T& x5,T1 a){  x0=a[0]; x1=a[1]; x2=a[2]; x3=a[3]; x4=a[4]; x5=a[5]; }
