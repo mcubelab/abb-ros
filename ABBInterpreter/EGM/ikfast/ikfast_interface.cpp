@@ -159,7 +159,7 @@ int main(int argc, char** argv)
 #endif
             if( !bSuccess ) {
                 //fprintf(stderr,"Failed to get ik solution\n");
-                printf("0\n");  //hack
+                //printf("0\n");  //hack
                 return -1;
             }
 
