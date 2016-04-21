@@ -7,8 +7,8 @@ MODULE EGM_test_UDP
     CONST egm_minmax egm_minmax_rot1:=[-2,2];! in degees
     CONST robtarget p20:=[[34,-499,123],[0.000494947,0.662278052,-0.749217059,-0.007831731],[0,0,-1,0],[9E9,9E9,9E9,9E9,9E9,9E9]];  ! need to fill in
 
-    PERS tooldata currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0,[0,0,0],[1,0,0,0],0,0,0]];
-    TASK PERS wobjdata wobjBordN:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[150,-500,8],[0.707106781,0,0,-0.707106781]]];
+    PERS tooldata currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
+    TASK PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[600,0,0],[0.707,0,-0.707,0]]];
     
     VAR pose posecorTable:=[[0,0,0],[1,0,0,0]];
     VAR pose posesenTable:=[[0,0,0],[1,0,0,0]];
@@ -17,7 +17,8 @@ MODULE EGM_test_UDP
     PROC main()
         ! Move to start position. Fine point is demanded.
         !MoveJ p20,v100,fine,UISpenholder;
-        CONST jointsTarget:=[[-17.35, -35.15, 69.13, -29.21, -37.68, 0],  [ 9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]; 
+        !CONST jointtarget jointsTarget:=[[-17.35, -35.15, 69.13, -29.21, -37.68, 0],  [ 9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]; 
+        CONST jointtarget jointsTarget:=[[0, 0, 0, 0, 90, 0],  [ 9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]; 
         MoveAbsJ jointsTarget, v50, fine, currentTool \Wobj:=currentWobj;
         testuc_UDP; 
     ENDPROC
@@ -31,7 +32,7 @@ MODULE EGM_test_UDP
         
         IF egmSt1 <= EGM_STATE_CONNECTED THEN
             ! Set up the EGM data source: UdpUc server using device "EGMsensor:"and configuration "default"
-            EGMSetupUC ROB_1, egmID1, "default", "EGMSensor:" \pose;
+            EGMSetupUC ROB_2, egmID1, "default", "EGMsensor" \pose;
         ENDIF
         
         !Which program to run
