@@ -1557,8 +1557,10 @@ bool RobotController::sendAndReceive(char *message, int messageLength,
         }
       }
     }
-    else
+    else{
       ROS_WARN("ROBOT_CONTROLLER: Failed to receive answer from ABB robot.");
+      exit(1);
+    }
   }
 
   pthread_mutex_unlock(&sendRecvMutex);
