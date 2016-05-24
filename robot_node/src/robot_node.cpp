@@ -44,6 +44,7 @@ RobotController::~RobotController() {
   handle_robot_Approach.shutdown();
   handle_robot_ActivateCSS.shutdown();
   handle_robot_DeactivateCSS.shutdown();
+  handle_robot_ActivateEGM.shutdown();
 
   // Shut down topics.
   handle_robot_CartesianLog.shutdown();
@@ -273,6 +274,9 @@ void RobotController::advertiseServices()
   // CSS
   INIT_HANDLE(ActivateCSS)
   INIT_HANDLE(DeactivateCSS)
+  
+  // EGM
+  INIT_HANDLE(ActivateEGM)
 }
 
 // helper function
@@ -907,6 +911,10 @@ SERVICE_CALLBACK_DEF(DeactivateCSS)
   return RUN_AND_RETURN_RESULT(deactCSS(req.ToPose), res.ret, res.msg, "Not able to deactivate CSS");
 }
 
+SERVICE_CALLBACK_DEF(ActivateEGM)
+{
+  return RUN_AND_RETURN_RESULT(actEGM(req), res.ret, res.msg, "Not able to activate EGM");
+}
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1361,6 +1369,18 @@ bool RobotController::deactCSS(geometry_msgs::Pose pose)
                                            pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z, randNumber).c_str());
   SEND_MSG_TO_ROBOT_AND_END
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// External Guided motion
+//////////////////////////////////////////////////////////////////////////////
+// Activate EGM
+bool RobotController::actEGM(robot_comm::robot_ActivateEGM::Request& req)
+{
+  PREPARE_TO_TALK_TO_ROBOT
+  strcpy(message, ABBInterpreter::actEGM(randNumber).c_str());
+  SEND_MSG_TO_ROBOT_AND_END
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Connect to Servers on Robot

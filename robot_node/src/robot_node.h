@@ -106,6 +106,8 @@ class RobotController
 	  //CSS
   SERVICE_CALLBACK_DEC(ActivateCSS)
   SERVICE_CALLBACK_DEC(DeactivateCSS)
+  
+  SERVICE_CALLBACK_DEC(ActivateEGM)
 
   // Advertise Services and Topics
   void advertiseServices();
@@ -226,6 +228,7 @@ class RobotController
   ros::ServiceServer handle_robot_ClearBuffer;
   ros::ServiceServer handle_robot_ActivateCSS;
   ros::ServiceServer handle_robot_DeactivateCSS;
+  ros::ServiceServer handle_robot_ActivateEGM;
  
   // Helper function for communicating with robot server
   bool sendAndReceive(char *message, int messageLength, 
@@ -251,6 +254,8 @@ class RobotController
   // CSS
   bool actCSS(robot_comm::robot_ActivateCSS::Request& req);
   bool deactCSS(geometry_msgs::Pose pose);
+  //EGM
+  bool actEGM(robot_comm::robot_ActivateEGM::Request& req);
   
   // Check if robot is currently moving or not
   bool is_moving();

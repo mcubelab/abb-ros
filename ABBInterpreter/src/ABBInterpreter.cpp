@@ -596,6 +596,17 @@ string ABBInterpreter::deactCSS(double x, double y, double z, double q0, double 
   return ss.str();
 }
 
+
+string ABBInterpreter::actEGM(int idCode)
+{
+  stringstream ss;
+  ss << "70 " //instruction code;
+     << idCode << " #";
+
+  return ss.str();
+}
+
+
 /**
   * Formats message to close the connection with the server in the ABB robot.
   * @param idCode User code identifying the message. Will be sent back with the acknowledgement.

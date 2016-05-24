@@ -60,6 +60,8 @@ void RobotComm::subscribe(ros::NodeHandle* np)
     np->serviceClient<robot_comm::robot_GetFK>(robotname + "_GetFK");
   handle_robot_Approach =
     np->serviceClient<robot_comm::robot_Approach>(robotname + "_Approach");
+  handle_robot_ActivateEGM =
+    np->serviceClient<robot_comm::robot_ActivateEGM>(robotname + "_ActivateEGM");
 }
 
 void RobotComm::subscribeCartesian(ros::NodeHandle* np, int q_len, 
@@ -104,6 +106,7 @@ void RobotComm::shutdown()
   handle_robot_GetIK.shutdown();
   handle_robot_GetFK.shutdown();
   handle_robot_Approach.shutdown();
+  handle_robot_ActivateEGM.shutdown();
 }
 
 bool RobotComm::Ping()
@@ -648,6 +651,13 @@ bool RobotComm::setupRobot(double tcp, double ori, int zone,
 
   return true;
 }
+
+
+bool RobotComm::ActivateEGM()
+{
+  return handle_robot_ActivateEGM.call(robot_ActivateEGM_srv);
+}
+
 
 bool RobotComm::SetDefaults()
 {

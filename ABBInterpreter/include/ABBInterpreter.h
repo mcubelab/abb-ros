@@ -50,6 +50,8 @@ namespace ABBInterpreter
   string actCSS(int refFrame, double refOrient_q0, double refOrient_qx, double refOrient_qy, double refOrient_qz, 
                 int softDir, double stiffness, double stiffnessNonSoftDir, int allowMove, double ramp, int idCode=0);
   string deactCSS(double x, double y, double z, double q0, double qx, double qy, double qz, int idCode=0);
+  // EGM
+  string actEGM(int idCode=0);
   
   int parseCartesian(string msg, double *x, double *y, double *z,
       double *q0, double *qx, double *qy, double *qz);

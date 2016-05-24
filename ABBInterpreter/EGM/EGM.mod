@@ -5,7 +5,6 @@ MODULE EGM_test_UDP
     
     CONST egm_minmax egm_minmax_lin1:=[-1,1]; !in mm
     CONST egm_minmax egm_minmax_rot1:=[-2,2];! in degees
-    CONST robtarget p20:=[[34,-499,123],[0.000494947,0.662278052,-0.749217059,-0.007831731],[0,0,-1,0],[9E9,9E9,9E9,9E9,9E9,9E9]];  ! need to fill in
 
     PERS tooldata currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
     TASK PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[600,0,0],[0.707,0,-0.707,0]]];
@@ -19,7 +18,7 @@ MODULE EGM_test_UDP
         !MoveJ p20,v100,fine,UISpenholder;
         !CONST jointtarget jointsTarget:=[[-17.35, -35.15, 69.13, -29.21, -37.68, 0],  [ 9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]; 
         CONST jointtarget jointsTarget:=[[0, 0, 0, 0, 90, 0],  [ 9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]; 
-        MoveAbsJ jointsTarget, v50, fine, currentTool \Wobj:=currentWobj;
+        ! MoveAbsJ jointsTarget, v50, fine, currentTool \Wobj:=currentWobj;
         testuc_UDP; 
     ENDPROC
   

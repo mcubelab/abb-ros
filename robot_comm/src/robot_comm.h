@@ -41,6 +41,8 @@
 #include <robot_comm/robot_ActivateCSS.h>
 #include <robot_comm/robot_DeactivateCSS.h>
 
+#include <robot_comm/robot_ActivateEGM.h>
+
 #include <geometry_msgs/Pose.h>
 
 #define NUM_JOINTS 6
@@ -167,6 +169,8 @@ class RobotComm
     bool moveReset(void);
     bool setupRobot(double tcp, double ori, int zone, double joints[NUM_JOINTS], geometry_msgs::Pose pose);
 
+    bool ActivateEGM();
+
     bool SetDefaults();
 
   private:
@@ -206,6 +210,8 @@ class RobotComm
     ros::ServiceClient handle_robot_AddBuffer;
     ros::ServiceClient handle_robot_ExecuteBuffer;
     ros::ServiceClient handle_robot_ClearBuffer;
+    
+    ros::ServiceClient handle_robot_ActivateEGM;
 
     // ROS services
     robot_comm::robot_Ping robot_Ping_srv;
@@ -237,6 +243,9 @@ class RobotComm
     robot_comm::robot_AddBuffer robot_AddBuffer_srv;
     robot_comm::robot_ExecuteBuffer robot_ExecuteBuffer_srv;
     robot_comm::robot_ClearBuffer robot_ClearBuffer_srv;
+    
+    robot_comm::robot_ActivateEGM robot_ActivateEGM_srv;
+    
 };
 
 #endif //ROBOT_COMM_H
