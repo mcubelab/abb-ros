@@ -215,6 +215,27 @@ string ABBInterpreter::getJoints(int idCode)
   return (msg);
 }
 
+
+  /**
+  * Formats message to set the motion suppervision thershold of the ABB robot.
+  * @param supervision Percentage of Motion supervision ([0,300]).
+  * @param idCode User code identifying the message. Will be sent back with the acknowledgement.
+  * @return String to be sent to ABB server.
+  */
+string ABBInterpreter::setMotionSupervision(double sup, int idCode)
+{
+  char buff[20];
+  string msg("05 ");//instruction code;
+  
+  sprintf(buff,"%.3d ",idCode); //identification code
+  msg += buff;
+  sprintf(buff,"%08.1lf ",sup);
+  msg += buff ;
+  msg += "#";
+
+  return (msg);
+}
+
 /**
   * Formats message to define the tool coordinates.
   * @param x X-coordinate of the tool.

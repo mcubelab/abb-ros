@@ -10,6 +10,7 @@ robot1: {speedORI: 10.0, speedTCP: 50.0,
   robotIp: 192.168.37.14, 
   robotLoggerPort: 5001, 
   robotMotionPort: 5000, 
-  vacuum: 0}
+  vacuum: 0,
+  supervision: 90}
 
 

@@ -93,6 +93,7 @@ class RobotController
   SERVICE_CALLBACK_DEC(SetTrackDist)
   SERVICE_CALLBACK_DEC(IsMoving)
   SERVICE_CALLBACK_DEC(Approach)
+  SERVICE_CALLBACK_DEC(SetMotionSupervision)
   
   // Buffer (joints) Comm declerations:
   SERVICE_CALLBACK_DEC(AddJointPosBuffer)
@@ -229,6 +230,7 @@ class RobotController
   ros::ServiceServer handle_robot_ActivateCSS;
   ros::ServiceServer handle_robot_DeactivateCSS;
   ros::ServiceServer handle_robot_ActivateEGM;
+  ros::ServiceServer handle_robot_SetMotionSupervision;
  
   // Helper function for communicating with robot server
   bool sendAndReceive(char *message, int messageLength, 
@@ -251,6 +253,7 @@ class RobotController
   bool setZone(int z);
   bool stop_nb();
   bool setComm(int mode);
+  bool setMotionSupervision(double sup);
   // CSS
   bool actCSS(robot_comm::robot_ActivateCSS::Request& req);
   bool deactCSS(geometry_msgs::Pose pose);
@@ -274,6 +277,7 @@ class RobotController
   Vec curToolI;
   Vec curWorkP;
   Quaternion curWorkQ;
+  double curSupervision;
 
   // Robot Position and Force Information
   Vec curP;

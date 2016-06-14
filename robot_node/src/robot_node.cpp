@@ -45,6 +45,7 @@ RobotController::~RobotController() {
   handle_robot_ActivateCSS.shutdown();
   handle_robot_DeactivateCSS.shutdown();
   handle_robot_ActivateEGM.shutdown();
+  handle_robot_SetMotionSupervision.shutdown();
 
   // Shut down topics.
   handle_robot_CartesianLog.shutdown();
@@ -165,7 +166,8 @@ bool RobotController::defaultRobotConfiguration()
   double defTx,defTy,defTz,defTq0,defTqx,defTqy,defTqz;
   double defTmass, defTCGx, defTCGy, defTCGz;
   double defTIx, defTIy, defTIz; 
-
+  double defMotionSupervision;
+  
   int zone;
   double speedTCP, speedORI;
  
@@ -217,6 +219,12 @@ bool RobotController::defaultRobotConfiguration()
   //Communication mode: default is blocking
   if (!setComm(BLOCKING))
     return false;
+  
+  //MotionSupervision
+  node->getParam(robotname_sl + "/supervision",defMotionSupervision);
+  printf("%f",defMotionSupervision);
+  if(!setMotionSupervision(defMotionSupervision))
+    return false;
 
   // If everything is set, our default configuration has been set up correctly
   return true;
@@ -263,6 +271,7 @@ void RobotController::advertiseServices()
   INIT_HANDLE(IsMoving)
   INIT_HANDLE(SetDefaults)
   INIT_HANDLE(Approach)
+  INIT_HANDLE(SetMotionSupervision)
   // buffer code
   INIT_HANDLE(AddJointPosBuffer)
   INIT_HANDLE(ExecuteJointPosBuffer)
@@ -684,6 +693,26 @@ SERVICE_CALLBACK_DEF(SetComm)
   }
 }
 
+// Set the motion supervision of our robot
+SERVICE_CALLBACK_DEF(SetMotionSupervision)
+{
+
+  if (!setMotionSupervision(req.supervision))
+  {
+    res.ret = 0;
+    res.msg = "ROBOT_CONTROLLER: Not possible to set motion supervision ";
+    res.msg += "The value should be between 1 and 300";
+    ROS_INFO("ROBOT_CONTROLLER: SetMotionSupervision command not sent. "
+        "Invalid value.");
+    return false;
+  }
+  else
+  {
+    res.ret = 1;
+    res.msg = "ROBOT_CONTROLLER: Motion Supervision set.";
+    return true;
+  }
+}
 
 
 // Set the speed of our robot. Note that if we are in non-blocking mode, we 
@@ -1290,6 +1319,38 @@ bool RobotController::setComm(int mode)
     return false;
   }
 }
+
+// Set the motion supervision of our robot
+bool RobotController::setMotionSupervision(double sup)
+{
+ // Only take action if the required values are different than the actual ones
+  if(sup!=curSupervision)
+    {
+      PREPARE_TO_TALK_TO_ROBOT
+      
+      // Make sure it is within bounds
+      if (sup <= 0  || sup > 300)
+      {
+        ROS_INFO("ROBOT_CONTROLLER: SetMotionSupervision command not sent. Invalide value.");
+        return false;
+      }
+      
+      strcpy(message, ABBInterpreter::setMotionSupervision(sup,randNumber).c_str());
+      
+      if(sendAndReceive(message, strlen(message), reply, randNumber))
+      {
+        // If we set the motio supervision, remeber it
+        curSupervision = sup;
+        // We also save it to the parameter server
+        node->setParam(robotname_sl + "/supervision",sup);
+        return true;
+      }
+      else
+      return false;
+    }
+  return true;
+}
+
 
 // If we are in non-blocking mode, then we have a variable that keeps 
 //  track of whether we are moving or not. If we are in blocking mode,

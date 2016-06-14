@@ -32,6 +32,7 @@ namespace ABBInterpreter
   string setSpeed(double tcp, double ori, int idCode=0);
   string setAcc(double acc, double deacc, int idCode=0);
   string setZone(bool fine=0, double tcp_mm = 5.0, double ori_mm = 5.0, double ori_deg = 1.0, int idCode=0);
+  string setMotionSupervision(double sup = 90, int idCode=0);
   string closeConnection(int idCode=0);
   // Buffers
   // TCP Pose

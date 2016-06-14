@@ -14,6 +14,7 @@
 #include <robot_comm/robot_SetTool.h>
 #include <robot_comm/robot_SetInertia.h>
 #include <robot_comm/robot_SetComm.h>
+#include <robot_comm/robot_SetMotionSupervision.h>
 #include <robot_comm/robot_SetJoints.h>
 #include <robot_comm/robot_GetJoints.h>
 #include <robot_comm/robot_SetSpeed.h>
@@ -118,6 +119,7 @@ class RobotComm
     bool SetWorkObject(const double x, const double y, const double z, 
         const double q0, const double qx, const double qy, const double qz);
     bool SetZone(const int z);
+    bool SetMotionSupervision(double sup);
     bool SetTool(const double x, const double y, const double z, 
         const double q0, const double qx, const double qy, const double qz);
     bool SetInertia(const double m, const double cgx, const double cgy, 
@@ -203,6 +205,7 @@ class RobotComm
     ros::ServiceClient handle_robot_GetIK;
     ros::ServiceClient handle_robot_GetFK;
     ros::ServiceClient handle_robot_Approach;
+    ros::ServiceClient handle_robot_SetMotionSupervision;
     
     ros::ServiceClient handle_robot_AddJointPosBuffer;
     ros::ServiceClient handle_robot_ExecuteJointPosBuffer;
@@ -220,6 +223,7 @@ class RobotComm
     robot_comm::robot_GetCartesian robot_GetCartesian_srv;
     robot_comm::robot_SetWorkObject robot_SetWorkObject_srv;
     robot_comm::robot_SetZone robot_SetZone_srv;
+    robot_comm::robot_SetMotionSupervision robot_SetMotionSupervision_srv;
     robot_comm::robot_SetTool robot_SetTool_srv;
     robot_comm::robot_SetInertia robot_SetInertia_srv;
     robot_comm::robot_SetComm robot_SetComm_srv;

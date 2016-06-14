@@ -30,6 +30,8 @@ void RobotComm::subscribe(ros::NodeHandle* np)
     np->serviceClient<robot_comm::robot_SetWorkObject>(robotname + "_SetWorkObject");
   handle_robot_SetZone = 
     np->serviceClient<robot_comm::robot_SetZone>(robotname + "_SetZone");
+  handle_robot_SetMotionSupervision =
+    np->serviceClient<robot_comm::robot_SetMotionSupervision>(robotname + "_SetMotionSupervision");
   handle_robot_SetTool = 
     np->serviceClient<robot_comm::robot_SetTool>(robotname + "_SetTool");
   handle_robot_SetInertia = 
@@ -91,6 +93,7 @@ void RobotComm::shutdown()
   handle_robot_GetCartesian.shutdown();
   handle_robot_SetWorkObject.shutdown();
   handle_robot_SetZone.shutdown();
+  handle_robot_SetMotionSupervision.shutdown();
   handle_robot_SetTool.shutdown();
   handle_robot_SetInertia.shutdown();
   handle_robot_SetJoints.shutdown();
@@ -224,6 +227,12 @@ bool RobotComm::SetZone(const int z)
 {
   robot_SetZone_srv.request.mode = z;
   return handle_robot_SetZone.call(robot_SetZone_srv);
+}
+
+bool RobotComm::SetMotionSupervision(double sup)
+{
+  robot_SetMotionSupervision_srv.request.supervision = sup;
+  return handle_robot_SetMotionSupervision.call(robot_SetMotionSupervision_srv);
 }
 
 bool RobotComm::SetTool(const double x, const double y, const double z, 
