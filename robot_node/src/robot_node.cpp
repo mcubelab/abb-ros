@@ -167,6 +167,7 @@ bool RobotController::defaultRobotConfiguration()
   double defTmass, defTCGx, defTCGy, defTCGz;
   double defTIx, defTIy, defTIz; 
   double defMotionSupervision;
+  double defAccelerationStart, defAccelerationEnd;
   
   int zone;
   double speedTCP, speedORI;
@@ -222,10 +223,15 @@ bool RobotController::defaultRobotConfiguration()
   
   //MotionSupervision
   node->getParam(robotname_sl + "/supervision",defMotionSupervision);
-  printf("%f",defMotionSupervision);
   if(!setMotionSupervision(defMotionSupervision))
     return false;
 
+  //Acceleration
+  node->getParam(robotname_sl + "/accelerationStart",defAccelerationStart);
+  node->getParam(robotname_sl + "/accelerationEnd",defAccelerationEnd);
+  if(!setAcc(defAccelerationStart,defAccelerationEnd))
+    return false;
+ 
   // If everything is set, our default configuration has been set up correctly
   return true;
 }
